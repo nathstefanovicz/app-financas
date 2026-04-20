@@ -64,6 +64,7 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
 .sheet-title{font-size:1rem;font-weight:700;margin-bottom:16px;text-align:center}
 .fg{margin-bottom:12px}.fg label{display:block;font-size:.65rem;font-weight:500;color:var(--text2);margin-bottom:4px;text-transform:uppercase;letter-spacing:.3px}
 .fi{width:100%;padding:10px 12px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-size:.85rem;font-family:inherit;outline:none}.fi:focus{border-color:var(--accent)}.fi::placeholder{color:var(--text3)}
+.fi.money{font-size:1.1rem;font-weight:600;letter-spacing:.5px}
 select.fi{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238888a0' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:36px;background-color:var(--bg)}
 select.fi option{background:var(--card);color:var(--text)}
 .type-selector{display:flex;gap:5px;margin-bottom:14px}
@@ -136,54 +137,37 @@ select.fi option{background:var(--card);color:var(--text)}
 .confirm-box p{font-size:.85rem;margin-bottom:16px;line-height:1.4}
 .confirm-btns{display:flex;gap:8px}.confirm-btns button{flex:1;padding:11px;border-radius:var(--radius-sm);font-size:.8rem;font-weight:600;font-family:inherit;cursor:pointer;border:none}
 .btn-cancel{background:var(--bg);color:var(--text)}.btn-danger{background:var(--red);color:#fff}
-
-/* SYNC INDICATOR */
 .sync-bar{position:fixed;top:0;left:0;right:0;height:3px;z-index:300;transition:.3s}
-.sync-bar.syncing{background:var(--yellow)}
-.sync-bar.synced{background:var(--green)}
-.sync-bar.error{background:var(--red)}
+.sync-bar.syncing{background:var(--yellow)}.sync-bar.synced{background:var(--green)}.sync-bar.error{background:var(--red)}
 .sync-status{position:fixed;top:6px;right:8px;font-size:.5rem;padding:3px 8px;border-radius:8px;z-index:300;font-weight:600}
-.sync-status.syncing{background:var(--yellow-bg);color:var(--yellow)}
-.sync-status.synced{background:var(--green-bg);color:var(--green)}
-.sync-status.offline{background:var(--red-bg);color:var(--red)}
-
-/* SETUP PAGE */
+.sync-status.syncing{background:var(--yellow-bg);color:var(--yellow)}.sync-status.synced{background:var(--green-bg);color:var(--green)}.sync-status.offline{background:var(--red-bg);color:var(--red)}
 .setup-page{position:fixed;inset:0;background:var(--bg);z-index:500;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:30px}
 .setup-page.hidden{display:none}
-.setup-logo{font-size:3rem;margin-bottom:10px}
-.setup-title{font-size:1.3rem;font-weight:700;margin-bottom:6px}
+.setup-logo{font-size:3rem;margin-bottom:10px}.setup-title{font-size:1.3rem;font-weight:700;margin-bottom:6px}
 .setup-sub{font-size:.78rem;color:var(--text2);text-align:center;margin-bottom:24px;line-height:1.5}
-.setup-input{width:100%;max-width:400px;padding:14px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-size:.85rem;font-family:inherit;outline:none;margin-bottom:12px}
-.setup-input:focus{border-color:var(--accent)}
-.setup-input::placeholder{color:var(--text3)}
+.setup-input{width:100%;max-width:400px;padding:14px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-size:.85rem;font-family:inherit;outline:none;margin-bottom:12px}.setup-input:focus{border-color:var(--accent)}.setup-input::placeholder{color:var(--text3)}
 .setup-btn{width:100%;max-width:400px;padding:15px;border:none;border-radius:var(--radius-sm);background:linear-gradient(135deg,var(--accent),#4834d4);color:#fff;font-size:.95rem;font-weight:600;font-family:inherit;cursor:pointer;margin-bottom:10px}
 .setup-skip{background:none;border:none;color:var(--text3);font-size:.75rem;cursor:pointer;font-family:inherit;padding:10px}
-.setup-loading{color:var(--text2);font-size:.8rem;margin-top:10px}
 </style>
 </head>
 <body>
-
-<!-- SYNC BAR -->
 <div class="sync-bar" id="syncBar"></div>
 <div class="sync-status" id="syncSt"></div>
 
-<!-- SETUP PAGE -->
 <div class="setup-page" id="setupPage">
   <div class="setup-logo">💰</div>
   <div class="setup-title">Minhas Finanças</div>
-  <div class="setup-sub">Cole a URL do Google Apps Script para sincronizar seus dados na nuvem.<br>Siga as instruções para criar a URL.</div>
+  <div class="setup-sub">Cole a URL do Google Apps Script para sincronizar na nuvem.</div>
   <input type="text" class="setup-input" id="setupUrl" placeholder="https://script.google.com/macros/s/.../exec">
   <button class="setup-btn" onclick="connectCloud()">☁️ Conectar à Nuvem</button>
   <button class="setup-skip" onclick="skipSetup()">Usar apenas offline →</button>
-  <div class="setup-loading" id="setupLoading" style="display:none">Conectando...</div>
 </div>
 
 <div class="toast" id="toast"></div>
 <div class="confirm-overlay" id="cfmOv"><div class="confirm-box"><p id="cfmMsg"></p><div class="confirm-btns"><button class="btn-cancel" onclick="closeCfm()">Cancelar</button><button class="btn-danger" id="cfmBtn">OK</button></div></div></div>
 
-<!-- HOME -->
 <div class="page active" id="pageHome">
-<div class="header"><h1>💰 <span>Finanças</span></h1><div style="display:flex;gap:6px"><button class="btn-icon" onclick="syncFromCloud()" title="Sincronizar"><i class="ri-refresh-line"></i></button><button class="btn-icon" onclick="showPage('pageSettings')"><i class="ri-settings-3-line"></i></button></div></div>
+<div class="header"><h1>💰 <span>Finanças</span></h1><div style="display:flex;gap:6px"><button class="btn-icon" onclick="syncFromCloud()" title="Sync"><i class="ri-refresh-line"></i></button><button class="btn-icon" onclick="showPage('pageSettings')"><i class="ri-settings-3-line"></i></button></div></div>
 <div class="balance-card"><div class="balance-label">Saldo do Mês (realizado)</div><div class="balance-value" id="balVal">R$ 0</div><div class="balance-proj" id="balProj">Previsto: R$ 0</div><div class="balance-row"><div class="balance-mini"><div class="label">Entradas</div><div class="val inc" id="balIn">R$ 0</div></div><div class="balance-mini"><div class="label">Saídas + Cartões</div><div class="val exp" id="balOut">R$ 0</div></div></div></div>
 <div class="month-selector"><button class="nav-btn" onclick="chgM(-1)"><i class="ri-arrow-left-s-line"></i></button><div class="month-label"></div><button class="nav-btn" onclick="chgM(1)"><i class="ri-arrow-right-s-line"></i></button></div>
 <div class="quick-stats"><div class="stat-card"><div class="si grn"><i class="ri-arrow-down-line"></i></div><div class="sv" id="stIn">0</div><div class="sl">Entradas</div></div><div class="stat-card"><div class="si rd"><i class="ri-arrow-up-line"></i></div><div class="sv" id="stEx">0</div><div class="sl">Saídas</div></div><div class="stat-card"><div class="si ylw"><i class="ri-bank-card-line"></i></div><div class="sv" id="stCd">0</div><div class="sl">Cartões</div></div></div>
@@ -191,46 +175,50 @@ select.fi option{background:var(--card);color:var(--text)}
 <div class="section"><div class="section-header"><h3>Últimas Transações</h3><button class="see-all" onclick="showPage('pageTx')">Ver tudo →</button></div><div class="tx-list" id="recentList"></div></div>
 </div>
 
-<!-- TX -->
 <div class="page" id="pageTx"><div class="header"><h1>📋 <span>Transações</span></h1></div><div style="padding:14px 20px 0"><div class="month-selector" style="padding:0;margin-bottom:8px"><button class="nav-btn" onclick="chgM(-1)"><i class="ri-arrow-left-s-line"></i></button><div class="month-label"></div><button class="nav-btn" onclick="chgM(1)"><i class="ri-arrow-right-s-line"></i></button></div></div>
 <div class="filter-tabs"><button class="filter-tab active" onclick="setF('all',this)">Todos</button><button class="filter-tab" onclick="setF('income',this)">Entradas</button><button class="filter-tab" onclick="setF('expense',this)">Saídas</button><button class="filter-tab" onclick="setF('card',this)">Cartões</button><button class="filter-tab" onclick="setF('card_payment',this)">Pgto</button><button class="filter-tab" onclick="setF('fixed',this)">Fixos</button></div>
 <div class="section"><div class="tx-list" id="allList"></div></div></div>
 
-<!-- CARDS -->
 <div class="page" id="pageCards"><div class="header"><h1>💳 <span>Cartões</span></h1></div><div style="padding:14px 20px 0"><div class="month-selector" style="padding:0;margin-bottom:8px"><button class="nav-btn" onclick="chgM(-1)"><i class="ri-arrow-left-s-line"></i></button><div class="month-label"></div><button class="nav-btn" onclick="chgM(1)"><i class="ri-arrow-right-s-line"></i></button></div></div><div class="card-grand"><div class="cg-label">Total Faturas</div><div class="cg-val" id="cgT">R$ 0</div></div><div class="section" id="cardSec"></div></div>
 
-<!-- INVEST -->
 <div class="page" id="pageInvest"><div class="header"><h1>📈 <span>Investimentos</span></h1><div><button class="btn-icon" onclick="openInvSheet()"><i class="ri-add-line"></i></button></div></div>
 <div class="invest-cards"><div class="inv-card main"><div class="inv-label">Patrimônio Total</div><div class="inv-val" id="ivPat">R$ 0</div></div><div class="inv-row"><div class="inv-card sub"><div class="inv-label">Saldo Previsto</div><div class="inv-val sm" id="ivBal">R$ 0</div></div><div class="inv-card sub"><div class="inv-label">Investido</div><div class="inv-val sm" id="ivTot">R$ 0</div></div></div></div>
 <div class="section"><div class="section-header"><h3>Movimentações</h3></div><div class="tx-list" id="invList"></div></div></div>
 
-<!-- SETTINGS -->
 <div class="page" id="pageSettings"><div class="header"><h1>⚙️ <span>Ajustes</span></h1></div>
 <div class="settings-menu"><div class="sm-item" onclick="openMng('cards')"><div class="sm-left"><div class="sm-icon" style="color:var(--yellow)"><i class="ri-bank-card-2-line"></i></div><div><div class="sm-label">Cartões</div></div></div><div class="sm-right"><span class="sm-count" id="cC">0</span><i class="ri-arrow-right-s-line"></i></div></div><div class="sm-item" onclick="openMng('cats')"><div class="sm-left"><div class="sm-icon" style="color:var(--accent2)"><i class="ri-price-tag-3-line"></i></div><div><div class="sm-label">Categorias</div></div></div><div class="sm-right"><span class="sm-count" id="cCt">0</span><i class="ri-arrow-right-s-line"></i></div></div><div class="sm-item" onclick="openMng('fixed')"><div class="sm-left"><div class="sm-icon" style="color:var(--green)"><i class="ri-pushpin-line"></i></div><div><div class="sm-label">Fixos Mensais</div></div></div><div class="sm-right"><span class="sm-count" id="cF">0</span><i class="ri-arrow-right-s-line"></i></div></div></div>
-<div class="settings-menu"><div class="sm-item" onclick="openSheet('cloudSheet')"><div class="sm-left"><div class="sm-icon" style="color:var(--green)"><i class="ri-cloud-line"></i></div><div><div class="sm-label">Conexão Nuvem</div><div class="sm-sub" id="cloudStatus">Não configurado</div></div></div><div class="sm-right"><i class="ri-arrow-right-s-line"></i></div></div><div class="sm-item" onclick="syncFromCloud()"><div class="sm-left"><div class="sm-icon"><i class="ri-refresh-line"></i></div><div><div class="sm-label">Forçar Sincronização</div></div></div><div class="sm-right"><i class="ri-arrow-right-s-line"></i></div></div><div class="sm-item" onclick="cfmClr()"><div class="sm-left"><div class="sm-icon" style="color:var(--red)"><i class="ri-delete-bin-line"></i></div><div><div class="sm-label" style="color:var(--red)">Limpar Tudo</div></div></div><div class="sm-right"><i class="ri-arrow-right-s-line"></i></div></div></div>
-<p style="text-align:center;color:var(--text3);font-size:.55rem;margin-top:12px">💰 v7.0 Cloud</p></div>
+<div class="settings-menu"><div class="sm-item" onclick="openSheet('cloudSheet')"><div class="sm-left"><div class="sm-icon" style="color:var(--green)"><i class="ri-cloud-line"></i></div><div><div class="sm-label">Conexão Nuvem</div><div class="sm-sub" id="cloudStatus">Não configurado</div></div></div><div class="sm-right"><i class="ri-arrow-right-s-line"></i></div></div><div class="sm-item" onclick="syncFromCloud()"><div class="sm-left"><div class="sm-icon"><i class="ri-refresh-line"></i></div><div><div class="sm-label">Forçar Sincronização</div></div></div><div class="sm-right"><i class="ri-arrow-right-s-line"></i></div></div><div class="sm-item" onclick="cfmClr()"><div class="sm-left"><div class="sm-icon" style="color:var(--red)"><i class="ri-delete-bin-line"></i></div><div><div class="sm-label" style="color:var(--red)">Limpar Tudo</div></div></div><div class="sm-right"><i class="ri-arrow-right-s-line"></i></div></div></div></div>
 
 <button class="fab" id="fab" onclick="openAddSheet()"><i class="ri-add-line"></i></button>
 <nav class="bottom-nav"><button class="nav-item active" data-page="pageHome" onclick="showPage('pageHome')"><i class="ri-home-5-line"></i>Início</button><button class="nav-item" data-page="pageTx" onclick="showPage('pageTx')"><i class="ri-list-check-2"></i>Transações</button><button class="nav-item" data-page="pageCards" onclick="showPage('pageCards')"><i class="ri-bank-card-line"></i>Cartões</button><button class="nav-item" data-page="pageInvest" onclick="showPage('pageInvest')"><i class="ri-line-chart-line"></i>Investir</button><button class="nav-item" data-page="pageSettings" onclick="showPage('pageSettings')"><i class="ri-settings-3-line"></i>Ajustes</button></nav>
 <div class="modal-overlay" id="ov" onclick="closeSheet()"></div>
 
-<!-- ALL SHEETS (same as v6 + cloud config) -->
-<div class="bottom-sheet" id="addSheet"><div class="sheet-handle"></div><div class="sheet-title" id="shT">Nova Transação</div><div class="type-selector"><button class="type-btn a-income" data-t="income" onclick="selType('income')"><i class="ri-arrow-down-line"></i>Entrada</button><button class="type-btn" data-t="expense" onclick="selType('expense')"><i class="ri-arrow-up-line"></i>Saída</button><button class="type-btn" data-t="card" onclick="selType('card')"><i class="ri-bank-card-line"></i>Cartão</button></div><div class="card-fields" id="cFld"><div class="fg"><label>Cartão</label><select class="fi" id="txCrd"></select></div><div class="fg"><label>Parcelas</label><div class="inst-row"><input type="number" min="1" max="48" class="fi" id="txInst" value="1" oninput="uInst()"><span style="color:var(--text2);font-size:.7rem">x</span></div><div class="inst-info" id="iInfo"></div></div></div><div class="fg"><label>Data</label><div class="date-display"><div class="date-text" onclick="tCal('cw1')"><span id="dt1"></span><i class="ri-calendar-line"></i></div><button class="btn-today" onclick="pToday(1)">Hoje</button></div><div class="cal-wrap" id="cw1"><div class="cal-header"><span class="cal-title" id="ct1"></span><div class="cal-nav"><button onclick="event.stopPropagation();nCal(1,-1)"><i class="ri-arrow-up-s-line"></i></button><button onclick="event.stopPropagation();nCal(1,1)"><i class="ri-arrow-down-s-line"></i></button></div></div><div class="cal-weekdays"><span>D</span><span>S</span><span>T</span><span>Q</span><span>Q</span><span>S</span><span>S</span></div><div class="cal-days" id="cd1"></div></div></div><div class="fg"><label>Descrição</label><input type="text" class="fi" id="txDesc" placeholder="Ex: Almoço..."></div><div class="fg"><label>Valor (R$)</label><input type="number" step="0.01" class="fi" id="txVal" placeholder="0,00" inputmode="decimal" oninput="uInst()"></div><div class="fg"><label>Categoria</label><select class="fi" id="txCat"><option value="">Nenhuma</option></select></div><input type="hidden" id="eId"><input type="hidden" id="eGrp"><button class="btn-submit" onclick="saveTx()">Salvar</button><div id="eBtns"></div></div>
+<!-- ADD TX -->
+<div class="bottom-sheet" id="addSheet"><div class="sheet-handle"></div><div class="sheet-title" id="shT">Nova Transação</div>
+<div class="type-selector"><button class="type-btn a-income" data-t="income" onclick="selType('income')"><i class="ri-arrow-down-line"></i>Entrada</button><button class="type-btn" data-t="expense" onclick="selType('expense')"><i class="ri-arrow-up-line"></i>Saída</button><button class="type-btn" data-t="card" onclick="selType('card')"><i class="ri-bank-card-line"></i>Cartão</button></div>
+<div class="card-fields" id="cFld"><div class="fg"><label>Cartão</label><select class="fi" id="txCrd"></select></div><div class="fg"><label>Parcelas</label><div class="inst-row"><input type="number" min="1" max="48" class="fi" id="txInst" value="1" oninput="uInst()"><span style="color:var(--text2);font-size:.7rem">x</span></div><div class="inst-info" id="iInfo"></div></div></div>
+<div class="fg"><label>Data</label><div class="date-display"><div class="date-text" onclick="tCal('cw1')"><span id="dt1"></span><i class="ri-calendar-line"></i></div><button class="btn-today" onclick="pToday(1)">Hoje</button></div><div class="cal-wrap" id="cw1"><div class="cal-header"><span class="cal-title" id="ct1"></span><div class="cal-nav"><button onclick="event.stopPropagation();nCal(1,-1)"><i class="ri-arrow-up-s-line"></i></button><button onclick="event.stopPropagation();nCal(1,1)"><i class="ri-arrow-down-s-line"></i></button></div></div><div class="cal-weekdays"><span>D</span><span>S</span><span>T</span><span>Q</span><span>Q</span><span>S</span><span>S</span></div><div class="cal-days" id="cd1"></div></div></div>
+<div class="fg"><label>Descrição</label><input type="text" class="fi" id="txDesc" placeholder="Ex: Almoço..."></div>
+<div class="fg"><label>Valor (R$)</label><input type="text" class="fi money" id="txVal" inputmode="numeric" value="0,00" onfocus="this.select()" oninput="mInput(this);uInst()"></div>
+<div class="fg"><label>Categoria</label><select class="fi" id="txCat"><option value="">Nenhuma</option></select></div>
+<input type="hidden" id="eId"><input type="hidden" id="eGrp"><button class="btn-submit" onclick="saveTx()">Salvar</button><div id="eBtns"></div></div>
 
-<div class="bottom-sheet" id="paySheet"><div class="sheet-handle"></div><div class="sheet-title">Pagar Fatura</div><div class="fg"><label>Cartão</label><input type="text" class="fi" id="payN" readonly=""></div><div class="fg"><label>Data</label><div class="date-display"><div class="date-text" onclick="tCal('cw2')"><span id="dt2"></span><i class="ri-calendar-line"></i></div><button class="btn-today" onclick="pToday(2)">Hoje</button></div><div class="cal-wrap" id="cw2"><div class="cal-header"><span class="cal-title" id="ct2"></span><div class="cal-nav"><button onclick="event.stopPropagation();nCal(2,-1)"><i class="ri-arrow-up-s-line"></i></button><button onclick="event.stopPropagation();nCal(2,1)"><i class="ri-arrow-down-s-line"></i></button></div></div><div class="cal-weekdays"><span>D</span><span>S</span><span>T</span><span>Q</span><span>Q</span><span>S</span><span>S</span></div><div class="cal-days" id="cd2"></div></div></div><div class="fg"><label>Valor</label><input type="number" step="0.01" class="fi" id="payV" inputmode="decimal"></div><button class="btn-submit" onclick="savePayCd()">Registrar</button></div>
+<!-- PAY CARD -->
+<div class="bottom-sheet" id="paySheet"><div class="sheet-handle"></div><div class="sheet-title">Pagar Fatura</div><div class="fg"><label>Cartão</label><input type="text" class="fi" id="payN" readonly=""></div><div class="fg"><label>Data</label><div class="date-display"><div class="date-text" onclick="tCal('cw2')"><span id="dt2"></span><i class="ri-calendar-line"></i></div><button class="btn-today" onclick="pToday(2)">Hoje</button></div><div class="cal-wrap" id="cw2"><div class="cal-header"><span class="cal-title" id="ct2"></span><div class="cal-nav"><button onclick="event.stopPropagation();nCal(2,-1)"><i class="ri-arrow-up-s-line"></i></button><button onclick="event.stopPropagation();nCal(2,1)"><i class="ri-arrow-down-s-line"></i></button></div></div><div class="cal-weekdays"><span>D</span><span>S</span><span>T</span><span>Q</span><span>Q</span><span>S</span><span>S</span></div><div class="cal-days" id="cd2"></div></div></div><div class="fg"><label>Valor (R$)</label><input type="text" class="fi money" id="payV" inputmode="numeric" value="0,00" onfocus="this.select()" oninput="mInput(this)"></div><button class="btn-submit" onclick="savePayCd()">Registrar</button></div>
 
-<div class="bottom-sheet" id="invSheet"><div class="sheet-handle"></div><div class="sheet-title">📈 Investimento</div><div class="inv-type-row" style="margin-bottom:14px"><button class="inv-type-btn a-dep" id="ivBD" onclick="ivTp='deposit';uIvB()">📥 Depositar</button><button class="inv-type-btn" id="ivBW" onclick="ivTp='withdrawal';uIvB()">📤 Resgatar</button></div><div class="fg"><label>Data</label><div class="date-display"><div class="date-text" onclick="tCal('cw3')"><span id="dt3"></span><i class="ri-calendar-line"></i></div><button class="btn-today" onclick="pToday(3)">Hoje</button></div><div class="cal-wrap" id="cw3"><div class="cal-header"><span class="cal-title" id="ct3"></span><div class="cal-nav"><button onclick="event.stopPropagation();nCal(3,-1)"><i class="ri-arrow-up-s-line"></i></button><button onclick="event.stopPropagation();nCal(3,1)"><i class="ri-arrow-down-s-line"></i></button></div></div><div class="cal-weekdays"><span>D</span><span>S</span><span>T</span><span>Q</span><span>Q</span><span>S</span><span>S</span></div><div class="cal-days" id="cd3"></div></div></div><div class="fg"><label>Descrição</label><input type="text" class="fi" id="ivDesc" placeholder="Ex: Tesouro..."></div><div class="fg"><label>Valor</label><input type="number" step="0.01" class="fi" id="ivVal" inputmode="decimal" placeholder="0,00"></div><button class="btn-submit" onclick="saveInv()">Salvar</button></div>
+<!-- INVEST -->
+<div class="bottom-sheet" id="invSheet"><div class="sheet-handle"></div><div class="sheet-title">📈 Investimento</div><div class="inv-type-row" style="margin-bottom:14px"><button class="inv-type-btn a-dep" id="ivBD" onclick="ivTp='deposit';uIvB()">📥 Depositar</button><button class="inv-type-btn" id="ivBW" onclick="ivTp='withdrawal';uIvB()">📤 Resgatar</button></div><div class="fg"><label>Data</label><div class="date-display"><div class="date-text" onclick="tCal('cw3')"><span id="dt3"></span><i class="ri-calendar-line"></i></div><button class="btn-today" onclick="pToday(3)">Hoje</button></div><div class="cal-wrap" id="cw3"><div class="cal-header"><span class="cal-title" id="ct3"></span><div class="cal-nav"><button onclick="event.stopPropagation();nCal(3,-1)"><i class="ri-arrow-up-s-line"></i></button><button onclick="event.stopPropagation();nCal(3,1)"><i class="ri-arrow-down-s-line"></i></button></div></div><div class="cal-weekdays"><span>D</span><span>S</span><span>T</span><span>Q</span><span>Q</span><span>S</span><span>S</span></div><div class="cal-days" id="cd3"></div></div></div><div class="fg"><label>Descrição</label><input type="text" class="fi" id="ivDesc" placeholder="Ex: Tesouro..."></div><div class="fg"><label>Valor (R$)</label><input type="text" class="fi money" id="ivVal" inputmode="numeric" value="0,00" onfocus="this.select()" oninput="mInput(this)"></div><button class="btn-submit" onclick="saveInv()">Salvar</button></div>
 
-<!-- CLOUD CONFIG -->
-<div class="bottom-sheet" id="cloudSheet"><div class="sheet-handle"></div><div class="sheet-title">☁️ Conexão Nuvem</div><div class="fg"><label>URL do Google Apps Script</label><input type="text" class="fi" id="cloudUrl" placeholder="https://script.google.com/macros/s/.../exec"></div><button class="btn-submit" onclick="saveCloudUrl()">Salvar e Sincronizar</button><button class="btn-del" onclick="removeCloud()">Desconectar Nuvem</button></div>
+<!-- CLOUD -->
+<div class="bottom-sheet" id="cloudSheet"><div class="sheet-handle"></div><div class="sheet-title">☁️ Conexão Nuvem</div><div class="fg"><label>URL do Google Apps Script</label><input type="text" class="fi" id="cloudUrl" placeholder="https://script.google.com/macros/s/.../exec"></div><button class="btn-submit" onclick="saveCloudUrl()">Salvar e Sincronizar</button><button class="btn-del" onclick="removeCloud()">Desconectar</button></div>
 
-<!-- MANAGE SHEETS -->
+<!-- MANAGE -->
 <div class="bottom-sheet" id="mCrdS"><div class="sheet-handle"></div><div class="sheet-title">💳 Cartões</div><div id="mCL"></div><button class="btn-add-item" onclick="closeSheet();setTimeout(()=&gt;{$('eCIdx').value='-1';$('cNm').value='';$('cDu').value='';openSheet('aCrdS')},350)">+ Adicionar</button></div>
 <div class="bottom-sheet" id="aCrdS"><div class="sheet-handle"></div><div class="sheet-title" id="cST">Novo Cartão</div><div class="fg"><label>Nome</label><input type="text" class="fi" id="cNm" placeholder="Nubank"></div><div class="fg"><label>Vencimento</label><input type="number" min="1" max="31" class="fi" id="cDu" placeholder="15"></div><input type="hidden" id="eCIdx" value="-1"><button class="btn-submit" onclick="svCrd()">Salvar</button></div>
 <div class="bottom-sheet" id="mCatS"><div class="sheet-handle"></div><div class="sheet-title">🏷️ Categorias</div><div id="mCtL"></div><button class="btn-add-item" onclick="closeSheet();setTimeout(()=&gt;{$('eCtIdx').value='-1';$('ctNm').value='';document.querySelectorAll('.dcb').forEach(c=&gt;c.checked=false);openSheet('aCatS')},350)">+ Adicionar</button></div>
 <div class="bottom-sheet" id="aCatS"><div class="sheet-handle"></div><div class="sheet-title" id="ctST">Nova Categoria</div><div class="fg"><label>Nome</label><input type="text" class="fi" id="ctNm" placeholder="Alimentação"></div><div class="fg"><label>Destinada a</label><div class="dest-checks"><label class="dest-check"><input type="checkbox" class="dcb" value="income"> Entradas</label><label class="dest-check"><input type="checkbox" class="dcb" value="expense"> Saídas</label><label class="dest-check"><input type="checkbox" class="dcb" value="card"> Cartão</label></div></div><input type="hidden" id="eCtIdx" value="-1"><button class="btn-submit" onclick="svCat()">Salvar</button></div>
-<div class="bottom-sheet" id="mFixS"><div class="sheet-handle"></div><div class="sheet-title">📌 Fixos</div><div id="mFL"></div><button class="btn-add-item" onclick="closeSheet();setTimeout(()=&gt;{$('fxD').value='';$('fxV').value='';$('fxDy').value='';fxT='expense';uFxB();openSheet('aFixS')},350)">+ Adicionar</button></div>
-<div class="bottom-sheet" id="aFixS"><div class="sheet-handle"></div><div class="sheet-title">Novo Fixo</div><div class="fg"><label>Tipo</label><div class="fix-type-row"><button class="fix-type-btn" id="fBI" onclick="fxT='income';uFxB()">📥 Entrada</button><button class="fix-type-btn a-expense" id="fBE" onclick="fxT='expense';uFxB()">📤 Saída</button></div></div><div class="fg"><label>Descrição</label><input type="text" class="fi" id="fxD" placeholder="Salário..."></div><div class="fg"><label>Valor</label><input type="number" step="0.01" class="fi" id="fxV" inputmode="decimal" placeholder="0,00"></div><div class="fg"><label>Dia</label><input type="number" min="1" max="31" class="fi" id="fxDy" placeholder="10"></div><button class="btn-submit" onclick="svFix()">Salvar</button></div>
+<div class="bottom-sheet" id="mFixS"><div class="sheet-handle"></div><div class="sheet-title">📌 Fixos</div><div id="mFL"></div><button class="btn-add-item" onclick="closeSheet();setTimeout(()=&gt;{$('fxD').value='';mSet('fxV',0);$('fxDy').value='';fxT='expense';uFxB();openSheet('aFixS')},350)">+ Adicionar</button></div>
+<div class="bottom-sheet" id="aFixS"><div class="sheet-handle"></div><div class="sheet-title">Novo Fixo</div><div class="fg"><label>Tipo</label><div class="fix-type-row"><button class="fix-type-btn" id="fBI" onclick="fxT='income';uFxB()">📥 Entrada</button><button class="fix-type-btn a-expense" id="fBE" onclick="fxT='expense';uFxB()">📤 Saída</button></div></div><div class="fg"><label>Descrição</label><input type="text" class="fi" id="fxD" placeholder="Salário..."></div><div class="fg"><label>Valor (R$)</label><input type="text" class="fi money" id="fxV" inputmode="numeric" value="0,00" onfocus="this.select()" oninput="mInput(this)"></div><div class="fg"><label>Dia</label><input type="number" min="1" max="31" class="fi" id="fxDy" placeholder="10"></div><button class="btn-submit" onclick="svFix()">Salvar</button></div>
 
 <script>
 const $=id=>document.getElementById(id);
@@ -244,51 +232,22 @@ let fxT='expense',ivTp='deposit';
 let cal={1:{sel:todayStr(),vY:new Date().getFullYear(),vM:new Date().getMonth()},2:{sel:todayStr(),vY:new Date().getFullYear(),vM:new Date().getMonth()},3:{sel:todayStr(),vY:new Date().getFullYear(),vM:new Date().getMonth()}};
 let chart=null,cloudUrl='',syncing=false;
 
-// ===== CLOUD SYNC =====
+// ===== MONEY INPUT =====
+function mInput(el){let v=el.value.replace(/\D/g,'');v=v.replace(/^0+/,'')||'0';while(v.length<3)v='0'+v;const int=v.slice(0,-2),dec=v.slice(-2);el.value=parseInt(int).toLocaleString('pt-BR')+','+dec}
+function mGet(id){const v=$(id).value.replace(/\D/g,'');return parseInt(v||'0')/100}
+function mSet(id,val){const c=Math.round(val*100).toString();$(id).value=c;mInput($(id))}
+
+// ===== CLOUD =====
 function getCloudUrl(){return localStorage.getItem('cloud_url')||''}
 function setCloudUrl(url){localStorage.setItem('cloud_url',url);cloudUrl=url}
-
-function setSyncStatus(status,text){
-  const bar=$('syncBar'),st=$('syncSt');
-  bar.className='sync-bar '+status;st.className='sync-status '+status;st.textContent=text||'';
-  if(status==='synced')setTimeout(()=>{bar.className='sync-bar';st.className='sync-status'},2000);
-}
-
-async function syncToCloud(){
-  if(!cloudUrl||syncing)return;syncing=true;setSyncStatus('syncing','Salvando...');
-  try{
-    const data=JSON.stringify({transactions:S.transactions,fixedExpenses:S.fixedExpenses,investments:S.investments,cards:S.cards,categories:S.categories});
-    await fetch(cloudUrl,{method:'POST',body:data,mode:'no-cors'});
-    setSyncStatus('synced','✓ Salvo');
-  }catch(e){setSyncStatus('error','Erro ao salvar');console.error(e)}
-  syncing=false;
-}
-
-async function syncFromCloud(){
-  if(!cloudUrl)return toast('Configure a nuvem primeiro');
-  setSyncStatus('syncing','Baixando...');
-  try{
-    const r=await fetch(cloudUrl+'?t='+Date.now());const data=await r.json();
-    if(data&&data.transactions){
-      S.transactions=data.transactions||[];S.fixedExpenses=(data.fixedExpenses||[]).map(f=>({...f,type:f.type||'expense'}));
-      S.investments=data.investments||[];S.cards=data.cards||DCards.slice();
-      S.categories=(data.categories||DC).map(c=>({...c,dest:Array.isArray(c.dest)?c.dest:[c.dest]}));
-      saveLocal();renderAll();setSyncStatus('synced','✓ Sincronizado');toast('Sincronizado! ☁️');
-    }else{setSyncStatus('synced','Nuvem vazia')}
-  }catch(e){setSyncStatus('error','Erro');console.error(e);toast('Erro ao sincronizar')}
-}
-
+function setSyncSt(s,t){const b=$('syncBar'),st=$('syncSt');b.className='sync-bar '+s;st.className='sync-status '+s;st.textContent=t||'';if(s==='synced')setTimeout(()=>{b.className='sync-bar';st.className='sync-status'},2000)}
+async function syncToCloud(){if(!cloudUrl||syncing)return;syncing=true;setSyncSt('syncing','Salvando...');try{await fetch(cloudUrl,{method:'POST',body:JSON.stringify({transactions:S.transactions,fixedExpenses:S.fixedExpenses,investments:S.investments,cards:S.cards,categories:S.categories}),mode:'no-cors'});setSyncSt('synced','✓')}catch(e){setSyncSt('error','Erro')}syncing=false}
+async function syncFromCloud(){if(!cloudUrl)return toast('Configure a nuvem');setSyncSt('syncing','Baixando...');try{const r=await fetch(cloudUrl+'?t='+Date.now());const d=await r.json();if(d&&d.transactions){S.transactions=d.transactions||[];S.fixedExpenses=(d.fixedExpenses||[]).map(f=>({...f,type:f.type||'expense'}));S.investments=d.investments||[];S.cards=d.cards||DCards.slice();S.categories=(d.categories||DC).map(c=>({...c,dest:Array.isArray(c.dest)?c.dest:[c.dest]}));saveLocal();renderAll();setSyncSt('synced','✓');toast('Sincronizado!')}else{setSyncSt('synced','Vazio')}}catch(e){setSyncSt('error','Erro');toast('Erro ao sincronizar')}}
 function saveLocal(){localStorage.setItem('fin_v7',JSON.stringify({transactions:S.transactions,fixedExpenses:S.fixedExpenses,investments:S.investments,cards:S.cards,categories:S.categories}))}
 function loadLocal(){try{const d=localStorage.getItem('fin_v7');if(d){const p=JSON.parse(d);S.transactions=p.transactions||[];S.fixedExpenses=(p.fixedExpenses||[]).map(f=>({...f,type:f.type||'expense'}));S.investments=p.investments||[];S.cards=p.cards||DCards.slice();S.categories=(p.categories||DC).map(c=>({...c,dest:Array.isArray(c.dest)?c.dest:[c.dest]}))}}catch(e){}}
 function save(){saveLocal();if(cloudUrl)syncToCloud()}
-function load(){loadLocal();cloudUrl=getCloudUrl();if(cloudUrl){$('cloudStatus').textContent='Conectado';syncFromCloud()}}
-
-function connectCloud(){
-  const url=$('setupUrl').value.trim();if(!url)return toast('Cole a URL');
-  $('setupLoading').style.display='block';
-  setCloudUrl(url);cloudUrl=url;
-  syncFromCloud().then(()=>{$('setupPage').classList.add('hidden');renderAll()}).catch(()=>{$('setupPage').classList.add('hidden');renderAll()});
-}
+function load(){loadLocal();cloudUrl=getCloudUrl();if(cloudUrl){$('cloudStatus').textContent='Conectado';$('cloudUrl').value=cloudUrl;syncFromCloud()}}
+function connectCloud(){const url=$('setupUrl').value.trim();if(!url)return toast('Cole a URL');setCloudUrl(url);cloudUrl=url;$('setupPage').classList.add('hidden');syncFromCloud().then(()=>renderAll()).catch(()=>renderAll())}
 function skipSetup(){$('setupPage').classList.add('hidden');renderAll()}
 function saveCloudUrl(){const url=$('cloudUrl').value.trim();if(!url)return toast('Cole a URL');setCloudUrl(url);cloudUrl=url;closeSheet();$('cloudStatus').textContent='Conectado';syncFromCloud()}
 function removeCloud(){setCloudUrl('');cloudUrl='';closeSheet();$('cloudStatus').textContent='Não configurado';toast('Desconectado')}
@@ -302,10 +261,8 @@ function dLbl(d){const t=new Date(d+'T12:00:00');return`${t.getDate()} ${MS[t.ge
 function esc(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML}
 function addMo(ds,m){const d=new Date(ds+'T12:00:00');d.setMonth(d.getMonth()+m);return d.toISOString().split('T')[0]}
 function autoSt(d){return d>todayStr()?'Previsto':'Pago'}
-
 function fixedFor(){const yr=S.cY,mo=S.cM,dim=new Date(yr,mo+1,0).getDate(),mk=`${yr}-${String(mo+1).padStart(2,'0')}`;return S.fixedExpenses.filter(f=>!S.transactions.some(t=>t.fixedId===f.id&&t.date.startsWith(mk))).map(f=>{const day=Math.min(f.day,dim),date=`${mk}-${String(day).padStart(2,'0')}`;return{id:'fx_'+f.id+'_'+mk,fixedId:f.id,date,desc:f.desc,value:f.value,type:f.type,isFixed:true}})}
 function mTx(){const reg=S.transactions.filter(t=>{const d=new Date(t.date+'T12:00:00');return d.getMonth()===S.cM&&d.getFullYear()===S.cY});return[...reg,...fixedFor()]}
-
 function showPage(id){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));$(id).classList.add('active');document.querySelectorAll('.nav-item').forEach(n=>n.classList.toggle('active',n.dataset.page===id));$('fab').style.display=['pageSettings','pageInvest'].includes(id)?'none':'flex';renderAll()}
 function chgM(d){S.cM+=d;if(S.cM>11){S.cM=0;S.cY++}if(S.cM<0){S.cM=11;S.cY--}renderAll()}
 
@@ -317,27 +274,22 @@ function nCal(n,dir){cal[n].vM+=dir;if(cal[n].vM>11){cal[n].vM=0;cal[n].vY++}if(
 function tCal(id){$(id).classList.toggle('open')}
 function iCal(n,date){const d=new Date(date+'T12:00:00');cal[n]={sel:date,vY:d.getFullYear(),vM:d.getMonth()};$('dt'+n).textContent=dLbl(date);bCal(n)}
 
-// ===== RENDER (same as v6) =====
+// ===== RENDER =====
 function renderAll(){const lb=`${MN[S.cM]} ${S.cY}`;document.querySelectorAll('.month-label').forEach(el=>el.textContent=lb);const txs=mTx();let mIn=0,mEx=0,mCd=0,mCp=0,rIn=0,rEx=0,rCp=0;txs.forEach(t=>{const st=autoSt(t.date);if(t.type==='income'){mIn+=t.value;if(st==='Pago')rIn+=t.value}else if(t.type==='expense'){mEx+=t.value;if(st==='Pago')rEx+=t.value}else if(t.type==='card')mCd+=t.value;else if(t.type==='card_payment'){mCp+=t.value;if(st==='Pago')rCp+=t.value}});let sB=0;S.transactions.forEach(t=>{const d=new Date(t.date+'T12:00:00');if(d.getFullYear()<S.cY||(d.getFullYear()===S.cY&&d.getMonth()<S.cM)){if(t.type==='income')sB+=t.value;else if(t.type==='expense'||t.type==='card_payment')sB-=t.value}});const cur=sB+rIn-rEx-rCp,proj=sB+mIn-mEx-mCp;$('balVal').textContent=(cur>=0?'':'− ')+fmt(cur);$('balProj').textContent='Previsto: '+(proj>=0?'':'− ')+fmt(proj);$('balIn').textContent=fS(mIn);$('balOut').textContent=fS(mEx+mCp);$('stIn').textContent=fS(mIn);$('stEx').textContent=fS(mEx);$('stCd').textContent=fS(mCp);const sorted=[...txs].sort((a,b)=>b.date.localeCompare(a.date)||b.id.localeCompare(a.id));rTxL('recentList',sorted.slice(0,5));rFTx();rCht();rCSm();rInv();$('cC').textContent=S.cards.length;$('cCt').textContent=S.categories.length;$('cF').textContent=S.fixedExpenses.length}
-
 function txI(t){return t.type==='income'?'ri-arrow-down-line':t.type==='expense'?'ri-arrow-up-line':t.type==='card_payment'?'ri-money-dollar-circle-line':'ri-bank-card-line'}
 function rTxL(cid,txs){const c=$(cid);if(!txs.length){c.innerHTML='<div class="empty-state"><i class="ri-inbox-line"></i><p>Nenhuma transação</p></div>';return}c.innerHTML=txs.map(t=>{const st=autoSt(t.date);let bg='';if(t.isFixed)bg+=`<span class="badge fix">📌 Fixo</span>`;if(t.category)bg+=`<span class="badge cat">${esc(t.category)}</span>`;if(t.type==='card'&&t.cardName)bg+=`<span class="badge crd">${esc(t.cardName)}</span>`;if(t.type==='card_payment'&&t.cardName)bg+=`<span class="badge crd">Pgto ${esc(t.cardName)}</span>`;if(t.installmentTotal>1)bg+=`<span class="badge inst">${t.installmentCurrent}/${t.installmentTotal}</span>`;return`<div class="tx-item${t.isFixed?' fix-row':''}" onclick="${t.isFixed?`matFix('${t.fixedId}','${t.date}')`:`editTx('${t.id}')`}"><div class="tx-ic ${t.type}"><i class="${txI(t)}"></i></div><div class="tx-info"><div class="tx-desc">${esc(t.desc)}</div>${bg?`<div class="tx-meta">${bg}</div>`:''}<div class="tx-date">${dLbl(t.date)}</div></div><div class="tx-right"><div class="tx-amt ${t.type}">${t.type==='income'?'+':'−'} ${fmt(t.value)}</div><span class="tx-st ${st.toLowerCase()}">${st}</span></div></div>`}).join('')}
 function rFTx(){let txs=mTx();const f=S.cFlt;if(['income','expense','card','card_payment'].includes(f))txs=txs.filter(t=>t.type===f);else if(f==='fixed')txs=txs.filter(t=>t.isFixed||t.fixedId);txs.sort((a,b)=>b.date.localeCompare(a.date)||b.id.localeCompare(a.id));rTxL('allList',txs)}
 function setF(f,el){S.cFlt=f;document.querySelectorAll('.filter-tab').forEach(t=>t.classList.remove('active'));el.classList.add('active');rFTx()}
 function matFix(fId,date){const f=S.fixedExpenses.find(x=>x.id===fId);if(!f)return;const tx={id:gId(),fixedId:f.id,date,desc:f.desc,value:f.value,type:f.type,status:autoSt(date)};S.transactions.push(tx);save();editTx(tx.id)}
-
 function rCht(){const yr=S.cY,mo=S.cM,dim=new Date(yr,mo+1,0).getDate(),txs=mTx();let st=0;S.transactions.forEach(t=>{const d=new Date(t.date+'T12:00:00');if(d.getFullYear()<yr||(d.getFullYear()===yr&&d.getMonth()<mo)){if(t.type==='income')st+=t.value;else if(t.type==='expense'||t.type==='card_payment')st-=t.value}});const lbl=[],data=[];let r=st;for(let d=1;d<=dim;d++){lbl.push(d);const ds=`${yr}-${String(mo+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;txs.filter(t=>t.date===ds).forEach(t=>{if(t.type==='income')r+=t.value;else if(t.type==='expense'||t.type==='card_payment')r-=t.value});data.push(Math.round(r*100)/100)}const ctx=$('dailyChart').getContext('2d');if(chart)chart.destroy();const g=ctx.createLinearGradient(0,0,0,160);g.addColorStop(0,'rgba(108,92,231,.3)');g.addColorStop(1,'rgba(108,92,231,0)');chart=new Chart(ctx,{type:'line',data:{labels:lbl,datasets:[{data,borderColor:'#6c5ce7',backgroundColor:g,fill:true,tension:.4,pointRadius:0,pointHitRadius:20,borderWidth:2}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{backgroundColor:'#1a1a24',borderColor:'#2a2a3a',borderWidth:1,titleColor:'#8888a0',bodyColor:'#e8e8ef',bodyFont:{weight:'600'},cornerRadius:8,padding:10,callbacks:{label:c=>'R$ '+c.parsed.y.toLocaleString('pt-BR',{minimumFractionDigits:2}),title:c=>`Dia ${c[0].label}`}}},scales:{x:{grid:{display:false},ticks:{color:'#55556a',font:{size:9},maxTicksLimit:8},border:{display:false}},y:{grid:{color:'rgba(42,42,58,.5)'},ticks:{color:'#55556a',font:{size:9},callback:v=>Math.abs(v)>=1000?(v/1000).toFixed(0)+'k':v},border:{display:false}}},interaction:{intersect:false,mode:'index'}}})}
-
 function rCSm(){const txs=mTx(),pu=txs.filter(t=>t.type==='card'&&!t.isFixed),py=txs.filter(t=>t.type==='card_payment'&&!t.isFixed);const bc={};let g=0;S.cards.forEach(c=>{bc[c.name]={items:[],tot:0,paid:0,due:c.dueDay}});pu.forEach(t=>{const n=t.cardName||'?';if(!bc[n])bc[n]={items:[],tot:0,paid:0,due:0};bc[n].items.push(t);bc[n].tot+=t.value;g+=t.value});py.forEach(t=>{const n=t.cardName||'?';if(bc[n])bc[n].paid+=t.value});$('cgT').textContent=fmt(g);const sec=$('cardSec'),ns=Object.keys(bc).filter(n=>bc[n].tot>0||bc[n].paid>0);if(!ns.length){sec.innerHTML='<div class="empty-state"><i class="ri-bank-card-line"></i><p>Sem faturas</p></div>';return}sec.innerHTML=ns.map(n=>{const c=bc[n],rm=Math.max(0,c.tot-c.paid);const dt=c.items.sort((a,b)=>a.date.localeCompare(b.date)).map(t=>`<div class="cd-row"><span class="cd-desc">${esc(t.desc)}${t.installmentTotal>1?`<span class="cd-inst">${t.installmentCurrent}/${t.installmentTotal}</span>`:''}</span><span class="cd-val">${fmt(t.value)}</span></div>`).join('');return`<div class="card-summary-item"><div class="cs-header" onclick="this.nextElementSibling.classList.toggle('open');this.querySelector('.cs-chev').classList.toggle('open')"><div class="cs-name"><i class="ri-bank-card-2-line"></i>${esc(n)} <span style="font-size:.55rem;color:var(--text3)">venc.${c.due}</span></div><div class="cs-right"><div class="cs-total">${fmt(c.tot)}</div><i class="ri-arrow-down-s-line cs-chev"></i></div></div><div class="cs-body">${dt}<div class="cp-row"><span>Pago</span><span class="cp-val paid">${fmt(c.paid)}</span></div><div class="cp-row"><span>Restante</span><span class="cp-val rem">${fmt(rm)}</span></div>${rm>0?`<button class="btn-pay" onclick="openPay('${esc(n)}',${rm})">💳 Pagar</button>`:''}</div></div>`}).join('')}
-
 function rInv(){const ti=S.investments.reduce((s,i)=>s+(i.type==='deposit'?i.value:-i.value),0);let ab=0;S.transactions.forEach(t=>{if(t.type==='income')ab+=t.value;else if(t.type==='expense'||t.type==='card_payment')ab-=t.value});fixedFor().forEach(f=>{if(f.type==='income')ab+=f.value;else ab-=f.value});$('ivPat').textContent=(ab+ti>=0?'':'− ')+fmt(ab+ti);$('ivBal').textContent=(ab>=0?'':'− ')+fmt(ab);$('ivTot').textContent=fmt(ti);const list=$('invList');if(!S.investments.length){list.innerHTML='<div class="empty-state"><i class="ri-line-chart-line"></i><p>Nenhum investimento</p></div>';return}list.innerHTML=[...S.investments].sort((a,b)=>b.date.localeCompare(a.date)).map(i=>`<div class="tx-item" onclick="delInv('${i.id}')"><div class="tx-ic invest"><i class="${i.type==='deposit'?'ri-arrow-down-line':'ri-arrow-up-line'}"></i></div><div class="tx-info"><div class="tx-desc">${esc(i.desc)}</div><div class="tx-date">${dLbl(i.date)}</div></div><div class="tx-right"><div class="tx-amt" style="color:${i.type==='deposit'?'var(--green)':'var(--orange)'}">${i.type==='deposit'?'+':'−'} ${fmt(i.value)}</div><span class="tx-st">${i.type==='deposit'?'Depósito':'Resgate'}</span></div></div>`).join('')}
 
-// Forms
-function openInvSheet(){ivTp='deposit';uIvB();$('ivDesc').value='';$('ivVal').value='';$('cw3').classList.remove('open');iCal(3,todayStr());openSheet('invSheet')}
+// ===== FORMS =====
+function openInvSheet(){ivTp='deposit';uIvB();$('ivDesc').value='';mSet('ivVal',0);$('cw3').classList.remove('open');iCal(3,todayStr());openSheet('invSheet')}
 function uIvB(){$('ivBD').className='inv-type-btn'+(ivTp==='deposit'?' a-dep':'');$('ivBW').className='inv-type-btn'+(ivTp==='withdrawal'?' a-wit':'')}
-function saveInv(){const desc=$('ivDesc').value.trim(),val=parseFloat($('ivVal').value),date=cal[3].sel;if(!desc||!val||!date)return toast('Preencha tudo');S.investments.push({id:gId(),date,desc,value:val,type:ivTp});if(ivTp==='deposit')S.transactions.push({id:gId(),date,desc:'Investimento: '+desc,value:val,type:'expense',status:autoSt(date),category:'Investimento'});else S.transactions.push({id:gId(),date,desc:'Resgate: '+desc,value:val,type:'income',status:autoSt(date),category:'Investimento'});save();closeSheet();renderAll();toast(ivTp==='deposit'?'Investido!':'Resgatado!')}
+function saveInv(){const desc=$('ivDesc').value.trim(),val=mGet('ivVal'),date=cal[3].sel;if(!desc||!val||!date)return toast('Preencha tudo');S.investments.push({id:gId(),date,desc,value:val,type:ivTp});if(ivTp==='deposit')S.transactions.push({id:gId(),date,desc:'Investimento: '+desc,value:val,type:'expense',status:autoSt(date),category:'Investimento'});else S.transactions.push({id:gId(),date,desc:'Resgate: '+desc,value:val,type:'income',status:autoSt(date),category:'Investimento'});save();closeSheet();renderAll();toast(ivTp==='deposit'?'Investido!':'Resgatado!')}
 function delInv(id){showCfm('Excluir?',()=>{S.investments=S.investments.filter(i=>i.id!==id);save();renderAll();toast('OK!')})}
-
 function openMng(t){if(t==='cards'){rMC();openSheet('mCrdS')}else if(t==='cats'){rMCt();openSheet('mCatS')}else{rMF();openSheet('mFixS')}}
 function rMC(){$('mCL').innerHTML=S.cards.length?S.cards.map((c,i)=>`<div class="manage-item"><div class="mi-left"><div class="mi-name"><i class="ri-bank-card-2-line" style="color:var(--yellow)"></i>${esc(c.name)}</div><div class="mi-sub">Venc. dia ${c.dueDay}</div></div><div class="mi-actions"><button class="mi-btn" onclick="eCrd(${i})"><i class="ri-pencil-line"></i></button><button class="mi-btn" onclick="dCrd(${i})"><i class="ri-delete-bin-line"></i></button></div></div>`).join(''):'<p style="text-align:center;color:var(--text3);padding:20px;font-size:.75rem">Nenhum</p>'}
 function eCrd(i){closeSheet();setTimeout(()=>{$('cST').textContent='Editar';$('cNm').value=S.cards[i].name;$('cDu').value=S.cards[i].dueDay;$('eCIdx').value=i;openSheet('aCrdS')},350)}
@@ -350,19 +302,23 @@ function svCat(){const n=$('ctNm').value.trim(),d=[...document.querySelectorAll(
 function rMF(){$('mFL').innerHTML=S.fixedExpenses.length?S.fixedExpenses.map((f,i)=>`<div class="manage-item"><div class="mi-left"><div class="mi-name"><i class="ri-pushpin-line" style="color:${f.type==='income'?'var(--green)':'var(--red)'}"></i>${esc(f.desc)}</div><div class="mi-sub">${f.type==='income'?'📥':'📤'} ${fmt(f.value)} • Dia ${f.day}</div></div><div class="mi-actions"><button class="mi-btn" onclick="dFx(${i})"><i class="ri-delete-bin-line"></i></button></div></div>`).join(''):'<p style="text-align:center;color:var(--text3);padding:20px;font-size:.75rem">Nenhum</p>'}
 function dFx(i){showCfm('Excluir?',()=>{S.fixedExpenses.splice(i,1);save();rMF();renderAll();toast('OK!')})}
 function uFxB(){$('fBI').className='fix-type-btn'+(fxT==='income'?' a-income':'');$('fBE').className='fix-type-btn'+(fxT==='expense'?' a-expense':'')}
-function svFix(){const d=$('fxD').value.trim(),v=parseFloat($('fxV').value),dy=parseInt($('fxDy').value);if(!d||!v||!dy)return toast('Preencha');S.fixedExpenses.push({id:gId(),desc:d,value:v,day:dy,type:fxT});save();closeSheet();renderAll();toast('OK!')}
+function svFix(){const d=$('fxD').value.trim(),v=mGet('fxV'),dy=parseInt($('fxDy').value);if(!d||!v||!dy)return toast('Preencha');S.fixedExpenses.push({id:gId(),desc:d,value:v,day:dy,type:fxT});save();closeSheet();renderAll();toast('OK!')}
 
 function pCrdSel(){$('txCrd').innerHTML=S.cards.map(c=>`<option value="${esc(c.name)}">${esc(c.name)}</option>`).join('')}
 function pCatSel(){const s=$('txCat'),t=S.cType;s.innerHTML='<option value="">Nenhuma</option>'+S.categories.filter(c=>c.dest.includes(t)).map(c=>`<option value="${esc(c.name)}">${esc(c.name)}</option>`).join('')}
 function selType(t){S.cType=t;document.querySelectorAll('.type-btn').forEach(b=>{b.className='type-btn';if(b.dataset.t===t)b.classList.add('a-'+t)});$('cFld').classList.toggle('vis',t==='card');if(t==='card')pCrdSel();pCatSel();uInst()}
-function uInst(){const n=parseInt($('txInst').value)||1,v=parseFloat($('txVal').value)||0;$('iInfo').textContent=(S.cType==='card'&&n>1&&v>0)?`${n}x de R$ ${(v/n).toLocaleString('pt-BR',{minimumFractionDigits:2})}`:''}
-function openAddSheet(){$('eId').value='';$('eGrp').value='';$('shT').textContent='Nova Transação';$('txDesc').value='';$('txVal').value='';$('txInst').value='1';$('iInfo').textContent='';$('eBtns').innerHTML='';$('cw1').classList.remove('open');selType('income');pCatSel();$('txCat').value='';iCal(1,todayStr());openSheet('addSheet')}
-function editTx(id){const t=S.transactions.find(x=>x.id===id);if(!t)return;$('eId').value=id;$('eGrp').value=t.groupId||'';$('shT').textContent='Editar';$('txDesc').value=t.desc;$('txVal').value=t.value;$('txInst').value=t.installmentTotal||1;$('cw1').classList.remove('open');selType(t.type==='card_payment'?'expense':t.type);pCatSel();$('txCat').value=t.category||'';if(t.type==='card'&&t.cardName){pCrdSel();$('txCrd').value=t.cardName}iCal(1,t.date);uInst();openSheet('addSheet');let b=`<button class="btn-del" onclick="delTx('${id}')">🗑️ Excluir</button>`;if(t.groupId&&t.installmentTotal>1)b+=`<button class="btn-del orange" onclick="delGrp('${t.groupId}')">🗑️ Todas parcelas</button>`;$('eBtns').innerHTML=b}
-function saveTx(){const desc=$('txDesc').value.trim(),val=parseFloat($('txVal').value),inst=parseInt($('txInst').value)||1,eId=$('eId').value,date=cal[1].sel;if(!date||!desc||!val)return toast('Preencha tudo');if(S.cType==='card'&&!S.cards.length)return toast('Cadastre cartão');const cn=S.cType==='card'?$('txCrd').value:undefined,cat=$('txCat').value||undefined;if(eId){const i=S.transactions.findIndex(t=>t.id===eId);if(i>=0)S.transactions[i]={...S.transactions[i],date,desc,value:val,type:S.cType,status:autoSt(date),cardName:cn,category:cat};toast('OK!')}else{if(S.cType==='card'&&inst>1){const p=Math.round((val/inst)*100)/100,g=gId();for(let i=0;i<inst;i++){let v=p;if(i===inst-1)v=Math.round((val-p*(inst-1))*100)/100;const dt=addMo(date,i);S.transactions.push({id:gId(),groupId:g,date:dt,desc,value:v,type:'card',status:autoSt(dt),cardName:cn,category:cat,installmentCurrent:i+1,installmentTotal:inst})}toast(`${inst}x criadas!`)}else{S.transactions.push({id:gId(),date,desc,value:val,type:S.cType,status:autoSt(date),cardName:cn,category:cat});toast('OK!')}}save();closeSheet();renderAll()}
+function uInst(){const n=parseInt($('txInst').value)||1,v=mGet('txVal');$('iInfo').textContent=(S.cType==='card'&&n>1&&v>0)?`${n}x de R$ ${(v/n).toLocaleString('pt-BR',{minimumFractionDigits:2})}`:''}
+
+function openAddSheet(){$('eId').value='';$('eGrp').value='';$('shT').textContent='Nova Transação';$('txDesc').value='';mSet('txVal',0);$('txInst').value='1';$('iInfo').textContent='';$('eBtns').innerHTML='';$('cw1').classList.remove('open');selType('income');pCatSel();$('txCat').value='';iCal(1,todayStr());openSheet('addSheet')}
+
+function editTx(id){const t=S.transactions.find(x=>x.id===id);if(!t)return;$('eId').value=id;$('eGrp').value=t.groupId||'';$('shT').textContent='Editar';$('txDesc').value=t.desc;mSet('txVal',t.value);$('txInst').value=t.installmentTotal||1;$('cw1').classList.remove('open');selType(t.type==='card_payment'?'expense':t.type);pCatSel();$('txCat').value=t.category||'';if(t.type==='card'&&t.cardName){pCrdSel();$('txCrd').value=t.cardName}iCal(1,t.date);uInst();openSheet('addSheet');let b=`<button class="btn-del" onclick="delTx('${id}')">🗑️ Excluir</button>`;if(t.groupId&&t.installmentTotal>1)b+=`<button class="btn-del orange" onclick="delGrp('${t.groupId}')">🗑️ Todas parcelas</button>`;$('eBtns').innerHTML=b}
+
+function saveTx(){const desc=$('txDesc').value.trim(),val=mGet('txVal'),inst=parseInt($('txInst').value)||1,eId=$('eId').value,date=cal[1].sel;if(!date||!desc||!val)return toast('Preencha tudo');if(S.cType==='card'&&!S.cards.length)return toast('Cadastre cartão');const cn=S.cType==='card'?$('txCrd').value:undefined,cat=$('txCat').value||undefined;if(eId){const i=S.transactions.findIndex(t=>t.id===eId);if(i>=0)S.transactions[i]={...S.transactions[i],date,desc,value:val,type:S.cType,status:autoSt(date),cardName:cn,category:cat};toast('OK!')}else{if(S.cType==='card'&&inst>1){const p=Math.round((val/inst)*100)/100,g=gId();for(let i=0;i<inst;i++){let v=p;if(i===inst-1)v=Math.round((val-p*(inst-1))*100)/100;const dt=addMo(date,i);S.transactions.push({id:gId(),groupId:g,date:dt,desc,value:v,type:'card',status:autoSt(dt),cardName:cn,category:cat,installmentCurrent:i+1,installmentTotal:inst})}toast(`${inst}x criadas!`)}else{S.transactions.push({id:gId(),date,desc,value:val,type:S.cType,status:autoSt(date),cardName:cn,category:cat});toast('OK!')}}save();closeSheet();renderAll()}
+
 function delTx(id){showCfm('Excluir?',()=>{S.transactions=S.transactions.filter(t=>t.id!==id);save();closeSheet();renderAll();toast('OK!')})}
 function delGrp(g){const n=S.transactions.filter(t=>t.groupId===g).length;showCfm(`Excluir ${n} parcelas?`,()=>{S.transactions=S.transactions.filter(t=>t.groupId!==g);save();closeSheet();renderAll();toast('OK!')})}
-function openPay(n,a){$('payN').value=n;$('payV').value=a.toFixed(2);$('cw2').classList.remove('open');iCal(2,todayStr());openSheet('paySheet')}
-function savePayCd(){const n=$('payN').value,v=parseFloat($('payV').value),d=cal[2].sel;if(!d||!v)return toast('Preencha');S.transactions.push({id:gId(),date:d,desc:'Pgto '+n,value:v,type:'card_payment',status:autoSt(d),cardName:n,category:'Cartão'});save();closeSheet();renderAll();toast('OK!')}
+function openPay(n,a){$('payN').value=n;mSet('payV',a);$('cw2').classList.remove('open');iCal(2,todayStr());openSheet('paySheet')}
+function savePayCd(){const n=$('payN').value,v=mGet('payV'),d=cal[2].sel;if(!d||!v)return toast('Preencha');S.transactions.push({id:gId(),date:d,desc:'Pgto '+n,value:v,type:'card_payment',status:autoSt(d),cardName:n,category:'Cartão'});save();closeSheet();renderAll();toast('OK!')}
 
 function openSheet(id){$('ov').classList.add('open');$(id).classList.add('open')}
 function closeSheet(){$('ov').classList.remove('open');document.querySelectorAll('.bottom-sheet').forEach(s=>s.classList.remove('open'))}
@@ -373,8 +329,8 @@ function cfmClr(){showCfm('Apagar TUDO?',()=>{S.transactions=[];S.fixedExpenses=
 
 // INIT
 load();
-if(!cloudUrl&&!localStorage.getItem('fin_v7')){$('setupPage').classList.remove('hidden')}
-else{$('setupPage').classList.add('hidden');if(cloudUrl)$('cloudUrl').value=cloudUrl;$('cloudStatus').textContent=cloudUrl?'Conectado':'Offline'}
+if(!cloudUrl&&!localStorage.getItem('fin_v7'))$('setupPage').classList.remove('hidden');
+else{$('setupPage').classList.add('hidden');$('cloudStatus').textContent=cloudUrl?'Conectado':'Offline'}
 renderAll();
 </script>
 
