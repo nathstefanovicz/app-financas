@@ -141,8 +141,7 @@ select.fi option{background:var(--card);color:var(--text)}
 .sync-bar.syncing{background:var(--yellow)}.sync-bar.synced{background:var(--green)}.sync-bar.error{background:var(--red)}
 .sync-status{position:fixed;top:6px;right:8px;font-size:.5rem;padding:3px 8px;border-radius:8px;z-index:300;font-weight:600}
 .sync-status.syncing{background:var(--yellow-bg);color:var(--yellow)}.sync-status.synced{background:var(--green-bg);color:var(--green)}.sync-status.offline{background:var(--red-bg);color:var(--red)}
-.setup-page{position:fixed;inset:0;background:var(--bg);z-index:500;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:30px}
-.setup-page.hidden{display:none}
+.setup-page{position:fixed;inset:0;background:var(--bg);z-index:500;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:30px}.setup-page.hidden{display:none}
 .setup-logo{font-size:3rem;margin-bottom:10px}.setup-title{font-size:1.3rem;font-weight:700;margin-bottom:6px}
 .setup-sub{font-size:.78rem;color:var(--text2);text-align:center;margin-bottom:24px;line-height:1.5}
 .setup-input{width:100%;max-width:400px;padding:14px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-size:.85rem;font-family:inherit;outline:none;margin-bottom:12px}.setup-input:focus{border-color:var(--accent)}.setup-input::placeholder{color:var(--text3)}
@@ -151,23 +150,13 @@ select.fi option{background:var(--card);color:var(--text)}
 </style>
 </head>
 <body>
-<div class="sync-bar" id="syncBar"></div>
-<div class="sync-status" id="syncSt"></div>
-
-<div class="setup-page" id="setupPage">
-  <div class="setup-logo">💰</div>
-  <div class="setup-title">Minhas Finanças</div>
-  <div class="setup-sub">Cole a URL do Google Apps Script para sincronizar na nuvem.</div>
-  <input type="text" class="setup-input" id="setupUrl" placeholder="https://script.google.com/macros/s/.../exec">
-  <button class="setup-btn" onclick="connectCloud()">☁️ Conectar à Nuvem</button>
-  <button class="setup-skip" onclick="skipSetup()">Usar apenas offline →</button>
-</div>
-
+<div class="sync-bar" id="syncBar"></div><div class="sync-status" id="syncSt"></div>
+<div class="setup-page" id="setupPage"><div class="setup-logo">💰</div><div class="setup-title">Minhas Finanças</div><div class="setup-sub">Cole a URL do Google Apps Script para sincronizar na nuvem.</div><input type="text" class="setup-input" id="setupUrl" placeholder="https://script.google.com/macros/s/.../exec"><button class="setup-btn" onclick="connectCloud()">☁️ Conectar à Nuvem</button><button class="setup-skip" onclick="skipSetup()">Usar apenas offline →</button></div>
 <div class="toast" id="toast"></div>
 <div class="confirm-overlay" id="cfmOv"><div class="confirm-box"><p id="cfmMsg"></p><div class="confirm-btns"><button class="btn-cancel" onclick="closeCfm()">Cancelar</button><button class="btn-danger" id="cfmBtn">OK</button></div></div></div>
 
 <div class="page active" id="pageHome">
-<div class="header"><h1>💰 <span>Finanças</span></h1><div style="display:flex;gap:6px"><button class="btn-icon" onclick="syncFromCloud()" title="Sync"><i class="ri-refresh-line"></i></button><button class="btn-icon" onclick="showPage('pageSettings')"><i class="ri-settings-3-line"></i></button></div></div>
+<div class="header"><h1>💰 <span>Finanças</span></h1><div style="display:flex;gap:6px"><button class="btn-icon" onclick="syncFromCloud()"><i class="ri-refresh-line"></i></button><button class="btn-icon" onclick="showPage('pageSettings')"><i class="ri-settings-3-line"></i></button></div></div>
 <div class="balance-card"><div class="balance-label">Saldo do Mês (realizado)</div><div class="balance-value" id="balVal">R$ 0</div><div class="balance-proj" id="balProj">Previsto: R$ 0</div><div class="balance-row"><div class="balance-mini"><div class="label">Entradas</div><div class="val inc" id="balIn">R$ 0</div></div><div class="balance-mini"><div class="label">Saídas + Cartões</div><div class="val exp" id="balOut">R$ 0</div></div></div></div>
 <div class="month-selector"><button class="nav-btn" onclick="chgM(-1)"><i class="ri-arrow-left-s-line"></i></button><div class="month-label"></div><button class="nav-btn" onclick="chgM(1)"><i class="ri-arrow-right-s-line"></i></button></div>
 <div class="quick-stats"><div class="stat-card"><div class="si grn"><i class="ri-arrow-down-line"></i></div><div class="sv" id="stIn">0</div><div class="sl">Entradas</div></div><div class="stat-card"><div class="si rd"><i class="ri-arrow-up-line"></i></div><div class="sv" id="stEx">0</div><div class="sl">Saídas</div></div><div class="stat-card"><div class="si ylw"><i class="ri-bank-card-line"></i></div><div class="sv" id="stCd">0</div><div class="sl">Cartões</div></div></div>
@@ -193,26 +182,14 @@ select.fi option{background:var(--card);color:var(--text)}
 <nav class="bottom-nav"><button class="nav-item active" data-page="pageHome" onclick="showPage('pageHome')"><i class="ri-home-5-line"></i>Início</button><button class="nav-item" data-page="pageTx" onclick="showPage('pageTx')"><i class="ri-list-check-2"></i>Transações</button><button class="nav-item" data-page="pageCards" onclick="showPage('pageCards')"><i class="ri-bank-card-line"></i>Cartões</button><button class="nav-item" data-page="pageInvest" onclick="showPage('pageInvest')"><i class="ri-line-chart-line"></i>Investir</button><button class="nav-item" data-page="pageSettings" onclick="showPage('pageSettings')"><i class="ri-settings-3-line"></i>Ajustes</button></nav>
 <div class="modal-overlay" id="ov" onclick="closeSheet()"></div>
 
-<!-- ADD TX -->
-<div class="bottom-sheet" id="addSheet"><div class="sheet-handle"></div><div class="sheet-title" id="shT">Nova Transação</div>
-<div class="type-selector"><button class="type-btn a-income" data-t="income" onclick="selType('income')"><i class="ri-arrow-down-line"></i>Entrada</button><button class="type-btn" data-t="expense" onclick="selType('expense')"><i class="ri-arrow-up-line"></i>Saída</button><button class="type-btn" data-t="card" onclick="selType('card')"><i class="ri-bank-card-line"></i>Cartão</button></div>
-<div class="card-fields" id="cFld"><div class="fg"><label>Cartão</label><select class="fi" id="txCrd"></select></div><div class="fg"><label>Parcelas</label><div class="inst-row"><input type="number" min="1" max="48" class="fi" id="txInst" value="1" oninput="uInst()"><span style="color:var(--text2);font-size:.7rem">x</span></div><div class="inst-info" id="iInfo"></div></div></div>
-<div class="fg"><label>Data</label><div class="date-display"><div class="date-text" onclick="tCal('cw1')"><span id="dt1"></span><i class="ri-calendar-line"></i></div><button class="btn-today" onclick="pToday(1)">Hoje</button></div><div class="cal-wrap" id="cw1"><div class="cal-header"><span class="cal-title" id="ct1"></span><div class="cal-nav"><button onclick="event.stopPropagation();nCal(1,-1)"><i class="ri-arrow-up-s-line"></i></button><button onclick="event.stopPropagation();nCal(1,1)"><i class="ri-arrow-down-s-line"></i></button></div></div><div class="cal-weekdays"><span>D</span><span>S</span><span>T</span><span>Q</span><span>Q</span><span>S</span><span>S</span></div><div class="cal-days" id="cd1"></div></div></div>
-<div class="fg"><label>Descrição</label><input type="text" class="fi" id="txDesc" placeholder="Ex: Almoço..."></div>
-<div class="fg"><label>Valor (R$)</label><input type="text" class="fi money" id="txVal" inputmode="numeric" value="0,00" onfocus="this.select()" oninput="mInput(this);uInst()"></div>
-<div class="fg"><label>Categoria</label><select class="fi" id="txCat"><option value="">Nenhuma</option></select></div>
-<input type="hidden" id="eId"><input type="hidden" id="eGrp"><button class="btn-submit" onclick="saveTx()">Salvar</button><div id="eBtns"></div></div>
+<div class="bottom-sheet" id="addSheet"><div class="sheet-handle"></div><div class="sheet-title" id="shT">Nova Transação</div><div class="type-selector"><button class="type-btn a-income" data-t="income" onclick="selType('income')"><i class="ri-arrow-down-line"></i>Entrada</button><button class="type-btn" data-t="expense" onclick="selType('expense')"><i class="ri-arrow-up-line"></i>Saída</button><button class="type-btn" data-t="card" onclick="selType('card')"><i class="ri-bank-card-line"></i>Cartão</button></div><div class="card-fields" id="cFld"><div class="fg"><label>Cartão</label><select class="fi" id="txCrd"></select></div><div class="fg"><label>Parcelas</label><div class="inst-row"><input type="number" min="1" max="48" class="fi" id="txInst" value="1" oninput="uInst()"><span style="color:var(--text2);font-size:.7rem">x</span></div><div class="inst-info" id="iInfo"></div></div></div><div class="fg"><label>Data</label><div class="date-display"><div class="date-text" onclick="tCal('cw1')"><span id="dt1"></span><i class="ri-calendar-line"></i></div><button class="btn-today" onclick="pToday(1)">Hoje</button></div><div class="cal-wrap" id="cw1"><div class="cal-header"><span class="cal-title" id="ct1"></span><div class="cal-nav"><button onclick="event.stopPropagation();nCal(1,-1)"><i class="ri-arrow-up-s-line"></i></button><button onclick="event.stopPropagation();nCal(1,1)"><i class="ri-arrow-down-s-line"></i></button></div></div><div class="cal-weekdays"><span>D</span><span>S</span><span>T</span><span>Q</span><span>Q</span><span>S</span><span>S</span></div><div class="cal-days" id="cd1"></div></div></div><div class="fg"><label>Descrição</label><input type="text" class="fi" id="txDesc" placeholder="Ex: Almoço..."></div><div class="fg"><label>Valor (R$)</label><input type="text" class="fi money" id="txVal" inputmode="numeric" value="0,00" onfocus="this.select()" oninput="mInput(this);uInst()"></div><div class="fg"><label>Categoria</label><select class="fi" id="txCat"><option value="">Nenhuma</option></select></div><input type="hidden" id="eId"><input type="hidden" id="eGrp"><button class="btn-submit" onclick="saveTx()">Salvar</button><div id="eBtns"></div></div>
 
-<!-- PAY CARD -->
 <div class="bottom-sheet" id="paySheet"><div class="sheet-handle"></div><div class="sheet-title">Pagar Fatura</div><div class="fg"><label>Cartão</label><input type="text" class="fi" id="payN" readonly=""></div><div class="fg"><label>Data</label><div class="date-display"><div class="date-text" onclick="tCal('cw2')"><span id="dt2"></span><i class="ri-calendar-line"></i></div><button class="btn-today" onclick="pToday(2)">Hoje</button></div><div class="cal-wrap" id="cw2"><div class="cal-header"><span class="cal-title" id="ct2"></span><div class="cal-nav"><button onclick="event.stopPropagation();nCal(2,-1)"><i class="ri-arrow-up-s-line"></i></button><button onclick="event.stopPropagation();nCal(2,1)"><i class="ri-arrow-down-s-line"></i></button></div></div><div class="cal-weekdays"><span>D</span><span>S</span><span>T</span><span>Q</span><span>Q</span><span>S</span><span>S</span></div><div class="cal-days" id="cd2"></div></div></div><div class="fg"><label>Valor (R$)</label><input type="text" class="fi money" id="payV" inputmode="numeric" value="0,00" onfocus="this.select()" oninput="mInput(this)"></div><button class="btn-submit" onclick="savePayCd()">Registrar</button></div>
 
-<!-- INVEST -->
 <div class="bottom-sheet" id="invSheet"><div class="sheet-handle"></div><div class="sheet-title">📈 Investimento</div><div class="inv-type-row" style="margin-bottom:14px"><button class="inv-type-btn a-dep" id="ivBD" onclick="ivTp='deposit';uIvB()">📥 Depositar</button><button class="inv-type-btn" id="ivBW" onclick="ivTp='withdrawal';uIvB()">📤 Resgatar</button></div><div class="fg"><label>Data</label><div class="date-display"><div class="date-text" onclick="tCal('cw3')"><span id="dt3"></span><i class="ri-calendar-line"></i></div><button class="btn-today" onclick="pToday(3)">Hoje</button></div><div class="cal-wrap" id="cw3"><div class="cal-header"><span class="cal-title" id="ct3"></span><div class="cal-nav"><button onclick="event.stopPropagation();nCal(3,-1)"><i class="ri-arrow-up-s-line"></i></button><button onclick="event.stopPropagation();nCal(3,1)"><i class="ri-arrow-down-s-line"></i></button></div></div><div class="cal-weekdays"><span>D</span><span>S</span><span>T</span><span>Q</span><span>Q</span><span>S</span><span>S</span></div><div class="cal-days" id="cd3"></div></div></div><div class="fg"><label>Descrição</label><input type="text" class="fi" id="ivDesc" placeholder="Ex: Tesouro..."></div><div class="fg"><label>Valor (R$)</label><input type="text" class="fi money" id="ivVal" inputmode="numeric" value="0,00" onfocus="this.select()" oninput="mInput(this)"></div><button class="btn-submit" onclick="saveInv()">Salvar</button></div>
 
-<!-- CLOUD -->
 <div class="bottom-sheet" id="cloudSheet"><div class="sheet-handle"></div><div class="sheet-title">☁️ Conexão Nuvem</div><div class="fg"><label>URL do Google Apps Script</label><input type="text" class="fi" id="cloudUrl" placeholder="https://script.google.com/macros/s/.../exec"></div><button class="btn-submit" onclick="saveCloudUrl()">Salvar e Sincronizar</button><button class="btn-del" onclick="removeCloud()">Desconectar</button></div>
 
-<!-- MANAGE -->
 <div class="bottom-sheet" id="mCrdS"><div class="sheet-handle"></div><div class="sheet-title">💳 Cartões</div><div id="mCL"></div><button class="btn-add-item" onclick="closeSheet();setTimeout(()=&gt;{$('eCIdx').value='-1';$('cNm').value='';$('cDu').value='';openSheet('aCrdS')},350)">+ Adicionar</button></div>
 <div class="bottom-sheet" id="aCrdS"><div class="sheet-handle"></div><div class="sheet-title" id="cST">Novo Cartão</div><div class="fg"><label>Nome</label><input type="text" class="fi" id="cNm" placeholder="Nubank"></div><div class="fg"><label>Vencimento</label><input type="number" min="1" max="31" class="fi" id="cDu" placeholder="15"></div><input type="hidden" id="eCIdx" value="-1"><button class="btn-submit" onclick="svCrd()">Salvar</button></div>
 <div class="bottom-sheet" id="mCatS"><div class="sheet-handle"></div><div class="sheet-title">🏷️ Categorias</div><div id="mCtL"></div><button class="btn-add-item" onclick="closeSheet();setTimeout(()=&gt;{$('eCtIdx').value='-1';$('ctNm').value='';document.querySelectorAll('.dcb').forEach(c=&gt;c.checked=false);openSheet('aCatS')},350)">+ Adicionar</button></div>
@@ -232,27 +209,27 @@ let fxT='expense',ivTp='deposit';
 let cal={1:{sel:todayStr(),vY:new Date().getFullYear(),vM:new Date().getMonth()},2:{sel:todayStr(),vY:new Date().getFullYear(),vM:new Date().getMonth()},3:{sel:todayStr(),vY:new Date().getFullYear(),vM:new Date().getMonth()}};
 let chart=null,cloudUrl='',syncing=false;
 
-// ===== MONEY INPUT =====
+// MONEY INPUT
 function mInput(el){let v=el.value.replace(/\D/g,'');v=v.replace(/^0+/,'')||'0';while(v.length<3)v='0'+v;const int=v.slice(0,-2),dec=v.slice(-2);el.value=parseInt(int).toLocaleString('pt-BR')+','+dec}
-function mGet(id){const v=$(id).value.replace(/\D/g,'');return parseInt(v||'0')/100}
-function mSet(id,val){const c=Math.round(val*100).toString();$(id).value=c;mInput($(id))}
+function mGet(id){return parseInt($(id).value.replace(/\D/g,'')||'0')/100}
+function mSet(id,val){$(id).value=Math.round(val*100).toString();mInput($(id))}
 
-// ===== CLOUD =====
+// CLOUD
 function getCloudUrl(){return localStorage.getItem('cloud_url')||''}
 function setCloudUrl(url){localStorage.setItem('cloud_url',url);cloudUrl=url}
-function setSyncSt(s,t){const b=$('syncBar'),st=$('syncSt');b.className='sync-bar '+s;st.className='sync-status '+s;st.textContent=t||'';if(s==='synced')setTimeout(()=>{b.className='sync-bar';st.className='sync-status'},2000)}
-async function syncToCloud(){if(!cloudUrl||syncing)return;syncing=true;setSyncSt('syncing','Salvando...');try{await fetch(cloudUrl,{method:'POST',body:JSON.stringify({transactions:S.transactions,fixedExpenses:S.fixedExpenses,investments:S.investments,cards:S.cards,categories:S.categories}),mode:'no-cors'});setSyncSt('synced','✓')}catch(e){setSyncSt('error','Erro')}syncing=false}
-async function syncFromCloud(){if(!cloudUrl)return toast('Configure a nuvem');setSyncSt('syncing','Baixando...');try{const r=await fetch(cloudUrl+'?t='+Date.now());const d=await r.json();if(d&&d.transactions){S.transactions=d.transactions||[];S.fixedExpenses=(d.fixedExpenses||[]).map(f=>({...f,type:f.type||'expense'}));S.investments=d.investments||[];S.cards=d.cards||DCards.slice();S.categories=(d.categories||DC).map(c=>({...c,dest:Array.isArray(c.dest)?c.dest:[c.dest]}));saveLocal();renderAll();setSyncSt('synced','✓');toast('Sincronizado!')}else{setSyncSt('synced','Vazio')}}catch(e){setSyncSt('error','Erro');toast('Erro ao sincronizar')}}
-function saveLocal(){localStorage.setItem('fin_v7',JSON.stringify({transactions:S.transactions,fixedExpenses:S.fixedExpenses,investments:S.investments,cards:S.cards,categories:S.categories}))}
-function loadLocal(){try{const d=localStorage.getItem('fin_v7');if(d){const p=JSON.parse(d);S.transactions=p.transactions||[];S.fixedExpenses=(p.fixedExpenses||[]).map(f=>({...f,type:f.type||'expense'}));S.investments=p.investments||[];S.cards=p.cards||DCards.slice();S.categories=(p.categories||DC).map(c=>({...c,dest:Array.isArray(c.dest)?c.dest:[c.dest]}))}}catch(e){}}
-function save(){saveLocal();if(cloudUrl)syncToCloud()}
-function load(){loadLocal();cloudUrl=getCloudUrl();if(cloudUrl){$('cloudStatus').textContent='Conectado';$('cloudUrl').value=cloudUrl;syncFromCloud()}}
+function setSS(s,t){const b=$('syncBar'),st=$('syncSt');b.className='sync-bar '+s;st.className='sync-status '+s;st.textContent=t||'';if(s==='synced')setTimeout(()=>{b.className='sync-bar';st.className='sync-status'},2000)}
+async function syncTo(){if(!cloudUrl||syncing)return;syncing=true;setSS('syncing','Salvando...');try{await fetch(cloudUrl,{method:'POST',body:JSON.stringify({transactions:S.transactions,fixedExpenses:S.fixedExpenses,investments:S.investments,cards:S.cards,categories:S.categories}),mode:'no-cors'});setSS('synced','✓')}catch(e){setSS('error','Erro')}syncing=false}
+async function syncFromCloud(){if(!cloudUrl)return toast('Configure a nuvem');setSS('syncing','Baixando...');try{const r=await fetch(cloudUrl+'?t='+Date.now());const d=await r.json();if(d&&d.transactions){S.transactions=d.transactions||[];S.fixedExpenses=(d.fixedExpenses||[]).map(f=>({...f,type:f.type||'expense'}));S.investments=d.investments||[];S.cards=d.cards||DCards.slice();S.categories=(d.categories||DC).map(c=>({...c,dest:Array.isArray(c.dest)?c.dest:[c.dest]}));svL();renderAll();setSS('synced','✓');toast('Sincronizado!')}else setSS('synced','Vazio')}catch(e){setSS('error','Erro');toast('Erro sync')}}
+function svL(){localStorage.setItem('fin_v8',JSON.stringify({transactions:S.transactions,fixedExpenses:S.fixedExpenses,investments:S.investments,cards:S.cards,categories:S.categories}))}
+function ldL(){try{const d=localStorage.getItem('fin_v8');if(d){const p=JSON.parse(d);S.transactions=p.transactions||[];S.fixedExpenses=(p.fixedExpenses||[]).map(f=>({...f,type:f.type||'expense'}));S.investments=p.investments||[];S.cards=p.cards||DCards.slice();S.categories=(p.categories||DC).map(c=>({...c,dest:Array.isArray(c.dest)?c.dest:[c.dest]}))}}catch(e){}}
+function save(){svL();if(cloudUrl)syncTo()}
+function load(){ldL();cloudUrl=getCloudUrl();if(cloudUrl){$('cloudStatus').textContent='Conectado';$('cloudUrl').value=cloudUrl;syncFromCloud()}}
 function connectCloud(){const url=$('setupUrl').value.trim();if(!url)return toast('Cole a URL');setCloudUrl(url);cloudUrl=url;$('setupPage').classList.add('hidden');syncFromCloud().then(()=>renderAll()).catch(()=>renderAll())}
 function skipSetup(){$('setupPage').classList.add('hidden');renderAll()}
 function saveCloudUrl(){const url=$('cloudUrl').value.trim();if(!url)return toast('Cole a URL');setCloudUrl(url);cloudUrl=url;closeSheet();$('cloudStatus').textContent='Conectado';syncFromCloud()}
 function removeCloud(){setCloudUrl('');cloudUrl='';closeSheet();$('cloudStatus').textContent='Não configurado';toast('Desconectado')}
 
-// ===== HELPERS =====
+// HELPERS
 function fmt(v){return'R$ '+Math.abs(v).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}
 function fS(v){return Math.abs(v)>=1000?'R$ '+(Math.abs(v)/1000).toFixed(1).replace('.',',')+' k':'R$ '+Math.abs(v).toFixed(0)}
 function gId(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6)}
@@ -261,12 +238,13 @@ function dLbl(d){const t=new Date(d+'T12:00:00');return`${t.getDate()} ${MS[t.ge
 function esc(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML}
 function addMo(ds,m){const d=new Date(ds+'T12:00:00');d.setMonth(d.getMonth()+m);return d.toISOString().split('T')[0]}
 function autoSt(d){return d>todayStr()?'Previsto':'Pago'}
+function isOut(t){return t==='expense'||t==='card'||t==='card_payment'}
 function fixedFor(){const yr=S.cY,mo=S.cM,dim=new Date(yr,mo+1,0).getDate(),mk=`${yr}-${String(mo+1).padStart(2,'0')}`;return S.fixedExpenses.filter(f=>!S.transactions.some(t=>t.fixedId===f.id&&t.date.startsWith(mk))).map(f=>{const day=Math.min(f.day,dim),date=`${mk}-${String(day).padStart(2,'0')}`;return{id:'fx_'+f.id+'_'+mk,fixedId:f.id,date,desc:f.desc,value:f.value,type:f.type,isFixed:true}})}
 function mTx(){const reg=S.transactions.filter(t=>{const d=new Date(t.date+'T12:00:00');return d.getMonth()===S.cM&&d.getFullYear()===S.cY});return[...reg,...fixedFor()]}
 function showPage(id){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));$(id).classList.add('active');document.querySelectorAll('.nav-item').forEach(n=>n.classList.toggle('active',n.dataset.page===id));$('fab').style.display=['pageSettings','pageInvest'].includes(id)?'none':'flex';renderAll()}
 function chgM(d){S.cM+=d;if(S.cM>11){S.cM=0;S.cY++}if(S.cM<0){S.cM=11;S.cY--}renderAll()}
 
-// Calendar
+// CALENDAR
 function bCal(n){const c=cal[n],yr=c.vY,mo=c.vM;$('ct'+n).textContent=`${MN[mo]} ${yr}`;const f=new Date(yr,mo,1).getDay(),dim=new Date(yr,mo+1,0).getDate(),pd=new Date(yr,mo,0).getDate(),td=todayStr();let h='';for(let i=0;i<f;i++)h+=`<button class="cal-day other">${pd-f+1+i}</button>`;for(let d=1;d<=dim;d++){const ds=`${yr}-${String(mo+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;const cl=['cal-day'];if(ds===td)cl.push('today');if(ds===c.sel)cl.push('selected');h+=`<button class="${cl.join(' ')}" onclick="pDay(${n},'${ds}')">${d}</button>`}const rm=(f+dim)%7;if(rm)for(let i=1;i<=7-rm;i++)h+=`<button class="cal-day other">${i}</button>`;$('cd'+n).innerHTML=h}
 function pDay(n,ds){cal[n].sel=ds;$('dt'+n).textContent=dLbl(ds);bCal(n);$('cw'+n).classList.remove('open')}
 function pToday(n){const d=new Date();cal[n]={sel:todayStr(),vY:d.getFullYear(),vM:d.getMonth()};$('dt'+n).textContent=dLbl(todayStr());bCal(n);$('cw'+n).classList.remove('open')}
@@ -274,18 +252,57 @@ function nCal(n,dir){cal[n].vM+=dir;if(cal[n].vM>11){cal[n].vM=0;cal[n].vY++}if(
 function tCal(id){$(id).classList.toggle('open')}
 function iCal(n,date){const d=new Date(date+'T12:00:00');cal[n]={sel:date,vY:d.getFullYear(),vM:d.getMonth()};$('dt'+n).textContent=dLbl(date);bCal(n)}
 
-// ===== RENDER =====
-function renderAll(){const lb=`${MN[S.cM]} ${S.cY}`;document.querySelectorAll('.month-label').forEach(el=>el.textContent=lb);const txs=mTx();let mIn=0,mEx=0,mCd=0,mCp=0,rIn=0,rEx=0,rCp=0;txs.forEach(t=>{const st=autoSt(t.date);if(t.type==='income'){mIn+=t.value;if(st==='Pago')rIn+=t.value}else if(t.type==='expense'){mEx+=t.value;if(st==='Pago')rEx+=t.value}else if(t.type==='card')mCd+=t.value;else if(t.type==='card_payment'){mCp+=t.value;if(st==='Pago')rCp+=t.value}});let sB=0;S.transactions.forEach(t=>{const d=new Date(t.date+'T12:00:00');if(d.getFullYear()<S.cY||(d.getFullYear()===S.cY&&d.getMonth()<S.cM)){if(t.type==='income')sB+=t.value;else if(t.type==='expense'||t.type==='card_payment')sB-=t.value}});const cur=sB+rIn-rEx-rCp,proj=sB+mIn-mEx-mCp;$('balVal').textContent=(cur>=0?'':'− ')+fmt(cur);$('balProj').textContent='Previsto: '+(proj>=0?'':'− ')+fmt(proj);$('balIn').textContent=fS(mIn);$('balOut').textContent=fS(mEx+mCp);$('stIn').textContent=fS(mIn);$('stEx').textContent=fS(mEx);$('stCd').textContent=fS(mCp);const sorted=[...txs].sort((a,b)=>b.date.localeCompare(a.date)||b.id.localeCompare(a.id));rTxL('recentList',sorted.slice(0,5));rFTx();rCht();rCSm();rInv();$('cC').textContent=S.cards.length;$('cCt').textContent=S.categories.length;$('cF').textContent=S.fixedExpenses.length}
+// RENDER
+function renderAll(){
+  const lb=`${MN[S.cM]} ${S.cY}`;document.querySelectorAll('.month-label').forEach(el=>el.textContent=lb);
+  const txs=mTx();
+  let mIn=0,mEx=0,mCd=0,mCp=0,rIn=0,rOut=0;
+  txs.forEach(t=>{
+    const st=autoSt(t.date);
+    if(t.type==='income'){mIn+=t.value;if(st==='Pago')rIn+=t.value}
+    else if(t.type==='expense'){mEx+=t.value;if(st==='Pago')rOut+=t.value}
+    else if(t.type==='card'){mCd+=t.value;if(st==='Pago')rOut+=t.value}
+    else if(t.type==='card_payment'){mCp+=t.value;if(st==='Pago')rOut+=t.value}
+  });
+  let sB=0;S.transactions.forEach(t=>{const d=new Date(t.date+'T12:00:00');if(d.getFullYear()<S.cY||(d.getFullYear()===S.cY&&d.getMonth()<S.cM)){if(t.type==='income')sB+=t.value;else if(isOut(t.type))sB-=t.value}});
+  const cur=sB+rIn-rOut;
+  const proj=sB+mIn-mEx-mCd-mCp;
+  $('balVal').textContent=(cur>=0?'':'− ')+fmt(cur);
+  $('balProj').textContent='Previsto: '+(proj>=0?'':'− ')+fmt(proj);
+  $('balIn').textContent=fS(mIn);$('balOut').textContent=fS(mEx+mCd+mCp);
+  $('stIn').textContent=fS(mIn);$('stEx').textContent=fS(mEx);$('stCd').textContent=fS(mCd+mCp);
+  const sorted=[...txs].sort((a,b)=>b.date.localeCompare(a.date)||b.id.localeCompare(a.id));
+  rTxL('recentList',sorted.slice(0,5));rFTx();rCht();rCSm();rInv();
+  $('cC').textContent=S.cards.length;$('cCt').textContent=S.categories.length;$('cF').textContent=S.fixedExpenses.length;
+}
 function txI(t){return t.type==='income'?'ri-arrow-down-line':t.type==='expense'?'ri-arrow-up-line':t.type==='card_payment'?'ri-money-dollar-circle-line':'ri-bank-card-line'}
 function rTxL(cid,txs){const c=$(cid);if(!txs.length){c.innerHTML='<div class="empty-state"><i class="ri-inbox-line"></i><p>Nenhuma transação</p></div>';return}c.innerHTML=txs.map(t=>{const st=autoSt(t.date);let bg='';if(t.isFixed)bg+=`<span class="badge fix">📌 Fixo</span>`;if(t.category)bg+=`<span class="badge cat">${esc(t.category)}</span>`;if(t.type==='card'&&t.cardName)bg+=`<span class="badge crd">${esc(t.cardName)}</span>`;if(t.type==='card_payment'&&t.cardName)bg+=`<span class="badge crd">Pgto ${esc(t.cardName)}</span>`;if(t.installmentTotal>1)bg+=`<span class="badge inst">${t.installmentCurrent}/${t.installmentTotal}</span>`;return`<div class="tx-item${t.isFixed?' fix-row':''}" onclick="${t.isFixed?`matFix('${t.fixedId}','${t.date}')`:`editTx('${t.id}')`}"><div class="tx-ic ${t.type}"><i class="${txI(t)}"></i></div><div class="tx-info"><div class="tx-desc">${esc(t.desc)}</div>${bg?`<div class="tx-meta">${bg}</div>`:''}<div class="tx-date">${dLbl(t.date)}</div></div><div class="tx-right"><div class="tx-amt ${t.type}">${t.type==='income'?'+':'−'} ${fmt(t.value)}</div><span class="tx-st ${st.toLowerCase()}">${st}</span></div></div>`}).join('')}
 function rFTx(){let txs=mTx();const f=S.cFlt;if(['income','expense','card','card_payment'].includes(f))txs=txs.filter(t=>t.type===f);else if(f==='fixed')txs=txs.filter(t=>t.isFixed||t.fixedId);txs.sort((a,b)=>b.date.localeCompare(a.date)||b.id.localeCompare(a.id));rTxL('allList',txs)}
 function setF(f,el){S.cFlt=f;document.querySelectorAll('.filter-tab').forEach(t=>t.classList.remove('active'));el.classList.add('active');rFTx()}
 function matFix(fId,date){const f=S.fixedExpenses.find(x=>x.id===fId);if(!f)return;const tx={id:gId(),fixedId:f.id,date,desc:f.desc,value:f.value,type:f.type,status:autoSt(date)};S.transactions.push(tx);save();editTx(tx.id)}
-function rCht(){const yr=S.cY,mo=S.cM,dim=new Date(yr,mo+1,0).getDate(),txs=mTx();let st=0;S.transactions.forEach(t=>{const d=new Date(t.date+'T12:00:00');if(d.getFullYear()<yr||(d.getFullYear()===yr&&d.getMonth()<mo)){if(t.type==='income')st+=t.value;else if(t.type==='expense'||t.type==='card_payment')st-=t.value}});const lbl=[],data=[];let r=st;for(let d=1;d<=dim;d++){lbl.push(d);const ds=`${yr}-${String(mo+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;txs.filter(t=>t.date===ds).forEach(t=>{if(t.type==='income')r+=t.value;else if(t.type==='expense'||t.type==='card_payment')r-=t.value});data.push(Math.round(r*100)/100)}const ctx=$('dailyChart').getContext('2d');if(chart)chart.destroy();const g=ctx.createLinearGradient(0,0,0,160);g.addColorStop(0,'rgba(108,92,231,.3)');g.addColorStop(1,'rgba(108,92,231,0)');chart=new Chart(ctx,{type:'line',data:{labels:lbl,datasets:[{data,borderColor:'#6c5ce7',backgroundColor:g,fill:true,tension:.4,pointRadius:0,pointHitRadius:20,borderWidth:2}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{backgroundColor:'#1a1a24',borderColor:'#2a2a3a',borderWidth:1,titleColor:'#8888a0',bodyColor:'#e8e8ef',bodyFont:{weight:'600'},cornerRadius:8,padding:10,callbacks:{label:c=>'R$ '+c.parsed.y.toLocaleString('pt-BR',{minimumFractionDigits:2}),title:c=>`Dia ${c[0].label}`}}},scales:{x:{grid:{display:false},ticks:{color:'#55556a',font:{size:9},maxTicksLimit:8},border:{display:false}},y:{grid:{color:'rgba(42,42,58,.5)'},ticks:{color:'#55556a',font:{size:9},callback:v=>Math.abs(v)>=1000?(v/1000).toFixed(0)+'k':v},border:{display:false}}},interaction:{intersect:false,mode:'index'}}})}
-function rCSm(){const txs=mTx(),pu=txs.filter(t=>t.type==='card'&&!t.isFixed),py=txs.filter(t=>t.type==='card_payment'&&!t.isFixed);const bc={};let g=0;S.cards.forEach(c=>{bc[c.name]={items:[],tot:0,paid:0,due:c.dueDay}});pu.forEach(t=>{const n=t.cardName||'?';if(!bc[n])bc[n]={items:[],tot:0,paid:0,due:0};bc[n].items.push(t);bc[n].tot+=t.value;g+=t.value});py.forEach(t=>{const n=t.cardName||'?';if(bc[n])bc[n].paid+=t.value});$('cgT').textContent=fmt(g);const sec=$('cardSec'),ns=Object.keys(bc).filter(n=>bc[n].tot>0||bc[n].paid>0);if(!ns.length){sec.innerHTML='<div class="empty-state"><i class="ri-bank-card-line"></i><p>Sem faturas</p></div>';return}sec.innerHTML=ns.map(n=>{const c=bc[n],rm=Math.max(0,c.tot-c.paid);const dt=c.items.sort((a,b)=>a.date.localeCompare(b.date)).map(t=>`<div class="cd-row"><span class="cd-desc">${esc(t.desc)}${t.installmentTotal>1?`<span class="cd-inst">${t.installmentCurrent}/${t.installmentTotal}</span>`:''}</span><span class="cd-val">${fmt(t.value)}</span></div>`).join('');return`<div class="card-summary-item"><div class="cs-header" onclick="this.nextElementSibling.classList.toggle('open');this.querySelector('.cs-chev').classList.toggle('open')"><div class="cs-name"><i class="ri-bank-card-2-line"></i>${esc(n)} <span style="font-size:.55rem;color:var(--text3)">venc.${c.due}</span></div><div class="cs-right"><div class="cs-total">${fmt(c.tot)}</div><i class="ri-arrow-down-s-line cs-chev"></i></div></div><div class="cs-body">${dt}<div class="cp-row"><span>Pago</span><span class="cp-val paid">${fmt(c.paid)}</span></div><div class="cp-row"><span>Restante</span><span class="cp-val rem">${fmt(rm)}</span></div>${rm>0?`<button class="btn-pay" onclick="openPay('${esc(n)}',${rm})">💳 Pagar</button>`:''}</div></div>`}).join('')}
-function rInv(){const ti=S.investments.reduce((s,i)=>s+(i.type==='deposit'?i.value:-i.value),0);let ab=0;S.transactions.forEach(t=>{if(t.type==='income')ab+=t.value;else if(t.type==='expense'||t.type==='card_payment')ab-=t.value});fixedFor().forEach(f=>{if(f.type==='income')ab+=f.value;else ab-=f.value});$('ivPat').textContent=(ab+ti>=0?'':'− ')+fmt(ab+ti);$('ivBal').textContent=(ab>=0?'':'− ')+fmt(ab);$('ivTot').textContent=fmt(ti);const list=$('invList');if(!S.investments.length){list.innerHTML='<div class="empty-state"><i class="ri-line-chart-line"></i><p>Nenhum investimento</p></div>';return}list.innerHTML=[...S.investments].sort((a,b)=>b.date.localeCompare(a.date)).map(i=>`<div class="tx-item" onclick="delInv('${i.id}')"><div class="tx-ic invest"><i class="${i.type==='deposit'?'ri-arrow-down-line':'ri-arrow-up-line'}"></i></div><div class="tx-info"><div class="tx-desc">${esc(i.desc)}</div><div class="tx-date">${dLbl(i.date)}</div></div><div class="tx-right"><div class="tx-amt" style="color:${i.type==='deposit'?'var(--green)':'var(--orange)'}">${i.type==='deposit'?'+':'−'} ${fmt(i.value)}</div><span class="tx-st">${i.type==='deposit'?'Depósito':'Resgate'}</span></div></div>`).join('')}
 
-// ===== FORMS =====
+function rCht(){
+  const yr=S.cY,mo=S.cM,dim=new Date(yr,mo+1,0).getDate(),txs=mTx();
+  let st=0;S.transactions.forEach(t=>{const d=new Date(t.date+'T12:00:00');if(d.getFullYear()<yr||(d.getFullYear()===yr&&d.getMonth()<mo)){if(t.type==='income')st+=t.value;else if(isOut(t.type))st-=t.value}});
+  const lbl=[],data=[];let r=st;
+  for(let d=1;d<=dim;d++){lbl.push(d);const ds=`${yr}-${String(mo+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;txs.filter(t=>t.date===ds).forEach(t=>{if(t.type==='income')r+=t.value;else if(isOut(t.type))r-=t.value});data.push(Math.round(r*100)/100)}
+  const ctx=$('dailyChart').getContext('2d');if(chart)chart.destroy();
+  const g=ctx.createLinearGradient(0,0,0,160);g.addColorStop(0,'rgba(108,92,231,.3)');g.addColorStop(1,'rgba(108,92,231,0)');
+  chart=new Chart(ctx,{type:'line',data:{labels:lbl,datasets:[{data,borderColor:'#6c5ce7',backgroundColor:g,fill:true,tension:.4,pointRadius:0,pointHitRadius:20,borderWidth:2}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{backgroundColor:'#1a1a24',borderColor:'#2a2a3a',borderWidth:1,titleColor:'#8888a0',bodyColor:'#e8e8ef',bodyFont:{weight:'600'},cornerRadius:8,padding:10,callbacks:{label:c=>'R$ '+c.parsed.y.toLocaleString('pt-BR',{minimumFractionDigits:2}),title:c=>`Dia ${c[0].label}`}}},scales:{x:{grid:{display:false},ticks:{color:'#55556a',font:{size:9},maxTicksLimit:8},border:{display:false}},y:{grid:{color:'rgba(42,42,58,.5)'},ticks:{color:'#55556a',font:{size:9},callback:v=>Math.abs(v)>=1000?(v/1000).toFixed(0)+'k':v},border:{display:false}}},interaction:{intersect:false,mode:'index'}}});
+}
+
+function rCSm(){const txs=mTx(),pu=txs.filter(t=>t.type==='card'&&!t.isFixed),py=txs.filter(t=>t.type==='card_payment'&&!t.isFixed);const bc={};let g=0;S.cards.forEach(c=>{bc[c.name]={items:[],tot:0,paid:0,due:c.dueDay}});pu.forEach(t=>{const n=t.cardName||'?';if(!bc[n])bc[n]={items:[],tot:0,paid:0,due:0};bc[n].items.push(t);bc[n].tot+=t.value;g+=t.value});py.forEach(t=>{const n=t.cardName||'?';if(bc[n])bc[n].paid+=t.value});$('cgT').textContent=fmt(g);const sec=$('cardSec'),ns=Object.keys(bc).filter(n=>bc[n].tot>0||bc[n].paid>0);if(!ns.length){sec.innerHTML='<div class="empty-state"><i class="ri-bank-card-line"></i><p>Sem faturas</p></div>';return}sec.innerHTML=ns.map(n=>{const c=bc[n],rm=Math.max(0,c.tot-c.paid);const dt=c.items.sort((a,b)=>a.date.localeCompare(b.date)).map(t=>`<div class="cd-row"><span class="cd-desc">${esc(t.desc)}${t.installmentTotal>1?`<span class="cd-inst">${t.installmentCurrent}/${t.installmentTotal}</span>`:''}</span><span class="cd-val">${fmt(t.value)}</span></div>`).join('');return`<div class="card-summary-item"><div class="cs-header" onclick="this.nextElementSibling.classList.toggle('open');this.querySelector('.cs-chev').classList.toggle('open')"><div class="cs-name"><i class="ri-bank-card-2-line"></i>${esc(n)} <span style="font-size:.55rem;color:var(--text3)">venc.${c.due}</span></div><div class="cs-right"><div class="cs-total">${fmt(c.tot)}</div><i class="ri-arrow-down-s-line cs-chev"></i></div></div><div class="cs-body">${dt}<div class="cp-row"><span>Pago</span><span class="cp-val paid">${fmt(c.paid)}</span></div><div class="cp-row"><span>Restante</span><span class="cp-val rem">${fmt(rm)}</span></div>${rm>0?`<button class="btn-pay" onclick="openPay('${esc(n)}',${rm})">💳 Pagar</button>`:''}</div></div>`}).join('')}
+
+function rInv(){
+  const ti=S.investments.reduce((s,i)=>s+(i.type==='deposit'?i.value:-i.value),0);
+  let ab=0;S.transactions.forEach(t=>{if(t.type==='income')ab+=t.value;else if(isOut(t.type))ab-=t.value});
+  fixedFor().forEach(f=>{if(f.type==='income')ab+=f.value;else ab-=f.value});
+  $('ivPat').textContent=(ab+ti>=0?'':'− ')+fmt(ab+ti);$('ivBal').textContent=(ab>=0?'':'− ')+fmt(ab);$('ivTot').textContent=fmt(ti);
+  const list=$('invList');if(!S.investments.length){list.innerHTML='<div class="empty-state"><i class="ri-line-chart-line"></i><p>Nenhum investimento</p></div>';return}
+  list.innerHTML=[...S.investments].sort((a,b)=>b.date.localeCompare(a.date)).map(i=>`<div class="tx-item" onclick="delInv('${i.id}')"><div class="tx-ic invest"><i class="${i.type==='deposit'?'ri-arrow-down-line':'ri-arrow-up-line'}"></i></div><div class="tx-info"><div class="tx-desc">${esc(i.desc)}</div><div class="tx-date">${dLbl(i.date)}</div></div><div class="tx-right"><div class="tx-amt" style="color:${i.type==='deposit'?'var(--green)':'var(--orange)'}">${i.type==='deposit'?'+':'−'} ${fmt(i.value)}</div><span class="tx-st">${i.type==='deposit'?'Depósito':'Resgate'}</span></div></div>`).join('');
+}
+
+// FORMS
 function openInvSheet(){ivTp='deposit';uIvB();$('ivDesc').value='';mSet('ivVal',0);$('cw3').classList.remove('open');iCal(3,todayStr());openSheet('invSheet')}
 function uIvB(){$('ivBD').className='inv-type-btn'+(ivTp==='deposit'?' a-dep':'');$('ivBW').className='inv-type-btn'+(ivTp==='withdrawal'?' a-wit':'')}
 function saveInv(){const desc=$('ivDesc').value.trim(),val=mGet('ivVal'),date=cal[3].sel;if(!desc||!val||!date)return toast('Preencha tudo');S.investments.push({id:gId(),date,desc,value:val,type:ivTp});if(ivTp==='deposit')S.transactions.push({id:gId(),date,desc:'Investimento: '+desc,value:val,type:'expense',status:autoSt(date),category:'Investimento'});else S.transactions.push({id:gId(),date,desc:'Resgate: '+desc,value:val,type:'income',status:autoSt(date),category:'Investimento'});save();closeSheet();renderAll();toast(ivTp==='deposit'?'Investido!':'Resgatado!')}
@@ -303,23 +320,17 @@ function rMF(){$('mFL').innerHTML=S.fixedExpenses.length?S.fixedExpenses.map((f,
 function dFx(i){showCfm('Excluir?',()=>{S.fixedExpenses.splice(i,1);save();rMF();renderAll();toast('OK!')})}
 function uFxB(){$('fBI').className='fix-type-btn'+(fxT==='income'?' a-income':'');$('fBE').className='fix-type-btn'+(fxT==='expense'?' a-expense':'')}
 function svFix(){const d=$('fxD').value.trim(),v=mGet('fxV'),dy=parseInt($('fxDy').value);if(!d||!v||!dy)return toast('Preencha');S.fixedExpenses.push({id:gId(),desc:d,value:v,day:dy,type:fxT});save();closeSheet();renderAll();toast('OK!')}
-
 function pCrdSel(){$('txCrd').innerHTML=S.cards.map(c=>`<option value="${esc(c.name)}">${esc(c.name)}</option>`).join('')}
 function pCatSel(){const s=$('txCat'),t=S.cType;s.innerHTML='<option value="">Nenhuma</option>'+S.categories.filter(c=>c.dest.includes(t)).map(c=>`<option value="${esc(c.name)}">${esc(c.name)}</option>`).join('')}
 function selType(t){S.cType=t;document.querySelectorAll('.type-btn').forEach(b=>{b.className='type-btn';if(b.dataset.t===t)b.classList.add('a-'+t)});$('cFld').classList.toggle('vis',t==='card');if(t==='card')pCrdSel();pCatSel();uInst()}
 function uInst(){const n=parseInt($('txInst').value)||1,v=mGet('txVal');$('iInfo').textContent=(S.cType==='card'&&n>1&&v>0)?`${n}x de R$ ${(v/n).toLocaleString('pt-BR',{minimumFractionDigits:2})}`:''}
-
 function openAddSheet(){$('eId').value='';$('eGrp').value='';$('shT').textContent='Nova Transação';$('txDesc').value='';mSet('txVal',0);$('txInst').value='1';$('iInfo').textContent='';$('eBtns').innerHTML='';$('cw1').classList.remove('open');selType('income');pCatSel();$('txCat').value='';iCal(1,todayStr());openSheet('addSheet')}
-
 function editTx(id){const t=S.transactions.find(x=>x.id===id);if(!t)return;$('eId').value=id;$('eGrp').value=t.groupId||'';$('shT').textContent='Editar';$('txDesc').value=t.desc;mSet('txVal',t.value);$('txInst').value=t.installmentTotal||1;$('cw1').classList.remove('open');selType(t.type==='card_payment'?'expense':t.type);pCatSel();$('txCat').value=t.category||'';if(t.type==='card'&&t.cardName){pCrdSel();$('txCrd').value=t.cardName}iCal(1,t.date);uInst();openSheet('addSheet');let b=`<button class="btn-del" onclick="delTx('${id}')">🗑️ Excluir</button>`;if(t.groupId&&t.installmentTotal>1)b+=`<button class="btn-del orange" onclick="delGrp('${t.groupId}')">🗑️ Todas parcelas</button>`;$('eBtns').innerHTML=b}
-
 function saveTx(){const desc=$('txDesc').value.trim(),val=mGet('txVal'),inst=parseInt($('txInst').value)||1,eId=$('eId').value,date=cal[1].sel;if(!date||!desc||!val)return toast('Preencha tudo');if(S.cType==='card'&&!S.cards.length)return toast('Cadastre cartão');const cn=S.cType==='card'?$('txCrd').value:undefined,cat=$('txCat').value||undefined;if(eId){const i=S.transactions.findIndex(t=>t.id===eId);if(i>=0)S.transactions[i]={...S.transactions[i],date,desc,value:val,type:S.cType,status:autoSt(date),cardName:cn,category:cat};toast('OK!')}else{if(S.cType==='card'&&inst>1){const p=Math.round((val/inst)*100)/100,g=gId();for(let i=0;i<inst;i++){let v=p;if(i===inst-1)v=Math.round((val-p*(inst-1))*100)/100;const dt=addMo(date,i);S.transactions.push({id:gId(),groupId:g,date:dt,desc,value:v,type:'card',status:autoSt(dt),cardName:cn,category:cat,installmentCurrent:i+1,installmentTotal:inst})}toast(`${inst}x criadas!`)}else{S.transactions.push({id:gId(),date,desc,value:val,type:S.cType,status:autoSt(date),cardName:cn,category:cat});toast('OK!')}}save();closeSheet();renderAll()}
-
 function delTx(id){showCfm('Excluir?',()=>{S.transactions=S.transactions.filter(t=>t.id!==id);save();closeSheet();renderAll();toast('OK!')})}
 function delGrp(g){const n=S.transactions.filter(t=>t.groupId===g).length;showCfm(`Excluir ${n} parcelas?`,()=>{S.transactions=S.transactions.filter(t=>t.groupId!==g);save();closeSheet();renderAll();toast('OK!')})}
 function openPay(n,a){$('payN').value=n;mSet('payV',a);$('cw2').classList.remove('open');iCal(2,todayStr());openSheet('paySheet')}
 function savePayCd(){const n=$('payN').value,v=mGet('payV'),d=cal[2].sel;if(!d||!v)return toast('Preencha');S.transactions.push({id:gId(),date:d,desc:'Pgto '+n,value:v,type:'card_payment',status:autoSt(d),cardName:n,category:'Cartão'});save();closeSheet();renderAll();toast('OK!')}
-
 function openSheet(id){$('ov').classList.add('open');$(id).classList.add('open')}
 function closeSheet(){$('ov').classList.remove('open');document.querySelectorAll('.bottom-sheet').forEach(s=>s.classList.remove('open'))}
 function toast(m){const t=$('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200)}
@@ -327,9 +338,8 @@ let _cf;function showCfm(m,cb){$('cfmMsg').textContent=m;$('cfmOv').classList.ad
 function closeCfm(){$('cfmOv').classList.remove('open')}
 function cfmClr(){showCfm('Apagar TUDO?',()=>{S.transactions=[];S.fixedExpenses=[];S.investments=[];S.cards=DCards.slice();S.categories=DC.map(c=>({...c,dest:[...c.dest]}));save();renderAll();toast('OK!')})}
 
-// INIT
 load();
-if(!cloudUrl&&!localStorage.getItem('fin_v7'))$('setupPage').classList.remove('hidden');
+if(!cloudUrl&&!localStorage.getItem('fin_v8'))$('setupPage').classList.remove('hidden');
 else{$('setupPage').classList.add('hidden');$('cloudStatus').textContent=cloudUrl?'Conectado':'Offline'}
 renderAll();
 </script>
